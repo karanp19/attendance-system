@@ -1,0 +1,1479 @@
+\documentclass[ 12pt,a4paper,twocolumn,fleqn]{article}
+
+\usepackage{graphicx}
+\usepackage{geometry}
+ \geometry{
+ a4paper,
+ left=20mm,
+ right=25mm,
+ top=20mm,
+ bottom=25mm,
+ }
+ 
+% \usepackage[backend=biber]{biblatex}
+\usepackage[ natbib=true, style=numeric,sorting=none]{biblatex}
+\addbibresource{cites.bib}
+\usepackage{color}
+\usepackage{hyperref}
+\usepackage{fancybox}
+\usepackage{pageslts}
+\usepackage{fancyhdr}
+\usepackage{lineno}
+\usepackage{xtab,booktabs}
+\usepackage{setspace}
+\usepackage{amsmath}
+\usepackage{acronym} 
+\usepackage{enumitem}
+\usepackage{placeins}
+\usepackage{xcolor}
+\usepackage[compact]{titlesec}
+\titlespacing{\section}{0pt}{*0}{*0}
+\titlespacing{\subsection}{0pt}{*0}{*0}
+\titlespacing{\subsubsection}{0pt}{*0}{*0}
+\usepackage{titlesec}
+\usepackage{sectsty}
+\sectionfont{\centering}
+\usepackage{titlesec}
+\titleformat*{\section}{\bfseries}{\fontsize{18}{20}\selectfont\filcenter}
+\titleformat*{\subsection}{\bfseries}{\fontsize{12}{17}\selectfont}
+\titleformat*{\subsubsection}{\bfseries}{\fontsize{11}{17}\selectfont}
+\pagenumbering{arabic}
+\usepackage{calc}
+\usepackage{eso-pic}
+
+\makeatletter
+
+\newlength{\Page@FrameHeight}
+\newlength{\Page@FrameWidth}
+
+
+
+\makeatother
+\begin{document}
+\thispagestyle{empty}
+\onecolumn
+\newpage
+\pagenumbering{roman}
+
+\newpage
+\begin{center}
+\begin{Large}
+Abstract
+\end{Large}
+\end{center}
+\begin{spacing}{1.5}
+\emph{
+This report intends to discuss the use of a deep learning model (one-shot learning) and familiarise the reader with the algorithm and how it is used for the project. This project has both computational and realistic goals. The computational goals underscore the advantages of using one algorithm over the others. Computational goal also includes generating best efficiency and time complexity. Realistic goal, however, deals with the application of the algorithm, specifically, how it can be used for taking presence log. The Realistic goals also include the optimisation of model to such a degree that it can be used in mostly dimmed environments and being able to produce efficient recognition even with presence of image artifacts. On the other hand the app should be able to work concurrently with many users registering  the profiles and taking their attendance and being able to handle model calls in a timely manner with a good and simple user interface. To handle both computational goal and realistic goal, which our report intends to achieve, intensive research is needed and proper implementation is a must. Lastly, utmost attention should be given to the development chain so as to ensure proper and parallel integration of user threads and proper functioning of the project as a whole.\\
+\\
+\\
+Keywords:One shot learning,Siamese Neural Network,CNN,Flask,MySQL
+}
+\end{spacing}
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\listoffigures
+\newpage
+\begin{center}
+\begin{Large}\bfseries
+Acronym List
+\end{Large}
+\end{center}
+\input{acro_list}
+
+
+
+\newpage
+\setcounter{page}{1}
+\renewcommand{\thepage}{\arabic{page}}
+\section{Introduction}
+One-shot learning is a machine learning model that enables the model to learn and make predictions based on a small number of examples. It is beneficial in situations where it is hard or impractical to collect a lot of training data. One-shot learning has been used to do a lot of different things, like classifying images, translating languages, and keeping track of who was there and when. A one-shot learning attendance system is usually made up of a camera or other device that takes pictures or video of people entering or leaving a building or other restricted area. The system also includes a machine-learning model trained to recognise the faces of individuals authorised to access the area.For the system administrator to train the model, they must first take a few pictures of each person who is allowed to enter the area. These images are used to create a "reference" dataset that the model can use to learn the characteristics of each person's face.\cite{1}\\
+
+Once the model has been trained on the reference dataset, it can be used to recognise the faces of individuals as they enter or exit the restricted area. When the image capture device takes a picture of a person's face, the model compares the picture to the reference dataset to determine if the person is allowed to enter the area. The model allows the person to enter or exit the area if the person is authorised. If the person is not allowed in, the model can do a number of things, such as deny access, send an alert to security staff, or take a picture of the person so they can be identified later. One-shot learning has several advantages for attendance tracking systems. First, it allows the system to be trained on a few examples, reducing the amount of time and resources required to set up the system. Second, it lets the system recognise people even if their looks have changed slightly since the reference images were taken. For example, their hairstyle or facial hair might have changed. Lastly, one-shot learning can be used to recognise a lot of people with a small amount of training data. This makes it a good choice for large organisations with a lot of employees or other people who need to be recognised. There are also some challenges associated with using one-shot learning for attendance tracking. One challenge is that the system will only be accurate if the reference images are high quality or accurately represent the individual's appearance. Also, the system will have a more challenging time recognising people who are wearing masks or whose appearance has changed a lot since the reference images were taken. Finally, one-shot systems will be more vulnerable to adversarial attacks, where an individual attempt to deceive the system by presenting it with a forged or altered image.\cite{2}\\
+
+In summary, an attendance system using one-shot learning is a type of machine learning system that can recognise the faces of individuals based on a small number of reference images. It's helpful in keeping track of attendance when it's hard or impractical to collect a lot of training data, and it can recognise people even if they've changed a little since the reference images were taken. However, it can only be accurate if the reference images are of high quality or accurately represent the individual's appearance. It can be less effective at recognising individuals wearing disguises or significantly altering their appearance. During the website development phase of a one-shot learning attendance system project, the focus is on making the user interface and functions that will let users interact with the system. Usually, this means designing and building a website or web application that allows users to add new people to the system, look at attendance records, and manage access permissions. A critical aspect of the website development phase is creating a user-friendly interface that makes it easy for users to navigate and perform tasks. This involves designing a clear and intuitive layout, using familiar design elements (such as buttons and drop-down menus), and providing clear instructions and error messages to guide users through the process.\cite{3}\\
+
+In addition to the user interface, the website development phase also involves implementing the functionalities that enable the system to perform its core tasks. This includes building web forms for enrolling new individuals, creating database tables to store attendance records and other data, and writing code to enable the system to communicate with the image capture device and machine learning model. Testing and debugging the system to ensure it works right is another essential part of the website development phase. This includes developing test cases to simulate various scenarios (such as enrolling a new user or attempting to access the system with an unauthorised face) and identifying and resolving any issues that arise. Lastly, the website can be deployed and made available to users once it has been fully built and tested. This involves hosting the website on a web server and configuring any necessary security measures to protect sensitive data and ensure users' privacy.\cite{4}\\
+
+Overall, the website development phase of a one-shot learning attendance system project is an essential step in making a system that works and is easy to use. This type of system allows users to interact with it and do things like enrol new people and manage access permissions. To ensure the website is easy to use and reliable, it needs to be carefully planned and thought out. Assuring the security of a one-shot learning attendance system is an essential aspect of the project, as it helps to protect sensitive data and ensure the privacy of individuals who use the system. There are several steps that can be taken to address cyber-security issues in this type of project. Firstly, Encrypt data: One of the most effective ways to protect data is to encrypt it using a secure encryption algorithm. This makes it hard for people without permission to get to the data, even if they can get into the system. Secondly, Implement authentication and authorisation measures: Implementing authentication and authorisation measures helps ensure that authorised users can access the system and perform specific tasks. This may involve using passwords, biometric authentication (such as facial recognition), or other forms of authentication. Use secure protocols. When sending data over the internet, it's essential to use secure protocols like HTTPS to keep the data safe from being stolen by people who shouldn't have access to it. Thirdly, Regularly update software: Keeping the system's software up-to-date with the latest security patches and updates helps protect against vulnerabilities that attackers can exploit. Lastly, Perform regular security audits: Regularly reviewing the system's security measures and performing security audits can help identify and address any potential vulnerabilities. Taking these steps can significantly reduce the risk of cyber security issues in a one-shot learning and attendance system. But it's important to remember that no system is entirely safe, and security measures must be constantly checked and updated to ensure the system stays secure.\cite{5}\\
+
+\subsection{Applications}
+Here are some possible goals (or functional requirements) for a college
+attendance system that uses one-shot learning:
+
+\begin{itemize}
+\item
+  \begin{quote}
+  Track attendance: The system should be able to track attendance for
+  each student, including which classes they have attended and which
+  they have missed.
+  \end{quote}
+\item
+  \begin{quote}
+  Store attendance records: The system should be able to store
+  attendance records for each student, including the dates and times
+  that they attended or missed class.
+  \end{quote}
+\item
+  \begin{quote}
+  Generate reports: The system should be able to generate reports that
+  summarize attendance data, such as attendance percentages for each
+  student or class attendance averages.
+  \end{quote}
+\item
+  \begin{quote}
+  Alert instructors: The system should be able to alert instructors if a
+  student has missed a certain number of classes, allowing them to
+  follow up with the student if necessary.
+  \end{quote}
+\item
+  \begin{quote}
+  Manage access permissions: The system should enable administrators to
+  manage access permissions for each student, instructor, and staff
+  member, including adding or removing individuals from the system as
+  needed.
+  \end{quote}
+\end{itemize}
+
+\subsection{Motivation}
+As a college student, there are many demands on our time. Between classes, extracurricular activities, and studying, it can be difficult to find enough hours in the day to get everything done. One thing that can be particularly time-consuming is taking attendance in large classes. This is especially true if the instructor is using a manual attendance system, where each student must physically sign in or raise their hand to be counted present. One way to streamline this process is by using one shot learning to create an attendance system. One shot learning is defined as a type of machine learning where a model is extensively trained on a surprisingly small number of examples, and then is able to make predictions about new, unseen data. This can be especially useful in the context of attendance systems because it allows the model to quickly and accurately identify students based on a single image of their face.\\
+There are several benefits to using a one shot learning-based attendance system. First and foremost, it saves time. Instead of having to manually take attendance, the system can do it automatically, freeing up the instructor to focus on other tasks. This can be especially useful in large classes where it might take several minutes to take attendance the traditional way. Another benefit of using a one shot learning-based attendance system is that it can be more accurate than a manual system. When attendance is taken manually, there is always the risk of error, whether it's a student forgetting to sign in or the instructor misremembering who was present. With a one shot learning-based system, the model is trained in such a way that it is able to accurately identify each student, reducing the risk of error. In addition to saving time and increasing accuracy, using a one shot learning-based attendance system can also be more convenient for students. Instead of having to remember to sign in or raise their hand, they can simply walk into class and have their attendance recorded automatically. This can be especially useful for students who are running late or who are otherwise unable to physically sign in.
+
+\subsection{Objectives}
+Here are some possible goals (or functional requirements) for a college
+attendance system that uses one-shot learning:
+
+\begin{itemize}
+\item
+  \begin{quote}
+  Track attendance: The system should be able to track attendance for
+  each student, including which classes they have attended and which
+  they have missed.
+  \end{quote}
+\item
+  \begin{quote}
+  Store attendance records: The system should be able to store
+  attendance records for each student, including the dates and times
+  that they attended or missed class.
+  \end{quote}
+\item
+  \begin{quote}
+  Generate reports: The system should be able to generate reports that
+  summarize attendance data, such as attendance percentages for each
+  student or class attendance averages.
+  \end{quote}
+\item
+  \begin{quote}
+  Alert instructors: The system should be able to alert instructors if a
+  student has missed a certain number of classes, allowing them to
+  follow up with the student if necessary.
+  \end{quote}
+\item
+  \begin{quote}
+  Manage access permissions: The system should enable administrators to
+  manage access permissions for each student, instructor, and staff
+  member, including adding or removing individuals from the system as
+  needed.
+  \end{quote}
+\end{itemize}
+
+\subsection{Contributions}
+
+\begin{quote}
+Here is a detailed list of the tasks that Karan and Dev have performed
+while creating a college attendance system using one-shot learning:
+\end{quote}
+
+  
+
+  \begin{quote}
+  \textbf{Karan:}
+  \end{quote}
+\begin{quote}
+  In the \textbf{first} phase of the project:
+  \end{quote}
+  \begin{quote}
+  Collected and preprocessed the training data: This involved doing
+  things like choosing the images that would be used to train the model,
+  resizing or cropping the images so that they were all the same size,
+  and getting rid of any images that were of poor quality or didn't show
+  the right people.
+  \end{quote}
+
+  \begin{quote}
+  Selected an appropriate machine learning algorithm: This has involved
+  researching different machine learning algorithms and selecting the
+  one most suited to recognising individuals based on a  surprisingly small number of
+  images.
+  \end{quote}
+  \begin{quote}
+  In the \textbf{second} phase of the project:
+  \end{quote}
+  \begin{quote}
+  He created the basic frontend design: This involved tasks such as
+  designing the user interface for the attendance system, including the
+  layout, colour scheme, and visual elements such as buttons and icons.
+  \end{quote}
+  \begin{quote}
+  Designed the Relationship diagram: This involved tasks such as creating a
+  diagram that represents the relationships between the different
+  entities in the system (such as students, instructors, and attendance
+  records) and specifying the attributes and relationships for each
+  entity.
+  \end{quote}
+
+  \begin{quote}
+  Trained the model on the training data: This involved tasks such as
+  adjusting the model's parameters to optimise its performance,
+  monitoring the model's progress during training, and evaluating the
+  model's performance on a entirely diffrent dataset to ensure it was accurate
+  and reliable.
+  \end{quote}
+\begin{quote}
+  In the \textbf{third} phase of the project:
+  \end{quote}
+  \begin{quote}
+    Retrained model: Retraining the model involved improving its efficiency and accuracy by training it to a greater number of epochs and optimizing its custom training function. The final goal was to create a model that was more efficient and could precisely process data in less time.
+
+The first step was to train the model for a longer period by increasing the number of epochs from its previous value. This involved running the model through multiple iterations of the training process to optimize its parameters and reduce error rates. By training the model to a greater number of epochs, it was able to recognize and learn more complex patterns and relationships within the data, which improved its accuracy and efficiency.
+
+The second step involved optimizing the custom training function to load in the comparing script more efficiently. This involved fine-tuning the function to improve its speed and aim to reduce the amount of computational resources required to successfully train the model. By making the custom training function more efficient, the model could be trained faster and more accurately.
+  \end{quote}
+
+
+  \begin{quote}
+    Haarcascade introduction: Made such scripts that got frames from the video, then
+    cropped each frames to include the face only using haarcascade.
+  \end{quote}
+  \begin{quote}
+  optimised the model heavily using multi threading: this involved using 
+  multi threading libraries in the comparing script which made the model 
+  efficient by about 20x times.
+  \end{quote}
+  \begin{quote}
+  In the \textbf{fourth} phase of the project:
+  \end{quote}
+
+  \begin{quote}
+  Was responsible for evaluating the model's efficiency on both real-life and trained datasets. 
+   He carefully examined the model's accuracy and made necessary adjustments to ensure that it was performing well in different scenarios
+  \end{quote}
+  
+  \begin{quote}
+  \textbf{Dev:}
+  \end{quote}
+  \begin{quote}
+  In the \textbf{first} phase of the project:
+  \end{quote}
+  \begin{quote}
+  Optimised the model: This involved identifying and fixing any issues
+  with the model's performance, improving the model's efficiency by
+  optimising its parameters, and reducing the model's computational
+  requirements.
+  \end{quote}
+  \begin{quote}
+  Made the model bug-free: This involved tasks such as testing the model
+  to ensure that it was functioning correctly, identifying and fixing
+  any issues that arose during testing, and creating test cases to
+  simulate different scenarios and ensure the model's reliability.
+  \end{quote}
+  \begin{quote}
+  In the \textbf{second} phase of the project:
+  \end{quote}
+  \begin{quote}
+  Implemented Flask to the design: This involved tasks such as
+  integrating Flask into the system to enable it to interact with the
+  machine learning model and image capture device and writing code to
+  enable the system to perform tasks such as enrolling new individuals
+  and managing access permissions.
+  \end{quote}
+  \begin{quote}
+  Created the database: This has involved tasks such as designing the
+  database tables that would be used to store attendance records and
+  other data and writing code to enable the system to interact with the
+  database and store and retrieve data as needed.
+  \end{quote}
+  \begin{quote}
+  In the \textbf{third} phase of the project:
+  \end{quote}
+  \begin{quote}
+      Collected sample data: The process involved gathering real-life data that reflected the variables and scenarios that the model was intended to operate under. Once the data was collected, it was used to test the accuracy and reliability of the model, as well as to fine-tune and optimize its performance. The data was processed and analyzed to identify patterns and relationships between the variables, which were then used to refine the model and ensure that it accurately reflected the real-life variables and scenarios that it was intended to operate under.
+
+The sample data was also used to optimize the model's performance. By analyzing the data, developers were able to identify areas where the model was performing poorly and make adjustments to improve its performance.
+  \end{quote}
+
+  \begin{quote}
+      Integrated the model with website: Integrating the model with the website involved the process of gathering data from the frontend of the website and sending it to the model for processing. Once the model processed the data, the attendance information was marked in the database.
+
+The integration process started by creating an interface that allowed the website's frontend to communicate with the model. This interface was typically an application programming interface (API) that received data from the website's frontend and sent it to the model for processing. The API was responsible for handling requests and sending responses back to the website's frontend.
+
+When a user interacted with the website, the frontend gathered the relevant data, such as the student's name and image, and sent it to the API. The API then sent the data to the model for processing, which could involve recognizing the student's face, verifying their identity, and marking their attendance in the database. Once the model processed the data, it sent a response back to the API, which then returned the appropriate response to the website's frontend.
+  \end{quote}
+\begin{quote}
+  In the \textbf{fourth} phase of the project:
+  \end{quote}
+  \begin{quote}
+   Was responsible for testing the website and making final changes to the project. He played a crucial role in ensuring that the website was user-friendly and easy to navigate. He carefully examined every aspect of the website and made necessary changes to improve its performance.
+   \end{quote}
+\begin{quote}
+  \textbf{Vishal:}
+  \end{quote}
+  \begin{quote}
+  \textbf{Mayank:}
+  \end{quote}
+
+\subsection{Organization of project report}
+
+\begin{quote}
+This section will give an overview of the whole project, including what
+topics are discussed in the report and what each topic discusses in
+detail.
+
+Background: This section will give more information about the attendance
+system's situation, including the specific problems or challenges it is
+meant to solve. It also includes a review of related work, highlighting
+other attendance systems or one-shot learning systems that have been
+developed in the past.
+
+Methodology: This section will explain how the attendance system was
+made, including the machine learning algorithms and techniques used, the
+data and resources used to train the model, and any other tools or
+technologies used.
+
+Results: This section will show the project's results, such as
+performance metrics or assessments of the system's accuracy and
+reliability. It also includes examples of the system in use and user
+feedback or observations.
+
+Discussion: This part will explain the project's results and what they
+mean for the future. It also discusses any limitations of the system and
+potential areas for future work.
+
+Conclusion: This section will summarise the main findings and
+contributions of the project and provide a final assessment of the
+success of the attendance system.
+
+References: This section will list any references or sources that were
+cited in the report.
+\end{quote}
+
+\newpage
+\section{Theoretical background and Literature Survey}
+
+Attendance systems are used to track and record the attendance of
+students or employees in a variety of settings, including schools,
+colleges, and workplaces. One-shot learning is an approach to machine
+learning that lets a model learn from a small number of examples and
+make predictions based on what it has learned. This makes it a promising
+method for attendance systems. One-shot learning has been applied to attendance systems in a number of ways. For example, one-shot learning algorithms have been used to
+recognize the faces of students or employees and record their attendance
+based on this recognition. This type of system is known as a "facial
+recognition attendance system." Other one-shot learning approaches have
+been used to track attendance by recognizing patterns in other types of
+data, such as handwriting or signatures.A number of one-time learning algorithms, such as Siamese neural networks, prototypical networks, and metric-based methods, have been
+used in attendance systems. These algorithms have been successful at
+many things, like checking a face and figuring out what it is. But
+one-shot learning algorithms still need help, like how they need a lot
+of data to train and how hard it is for them to learn about new classes.
+
+Siamese neural networks, prototypical networks, and metric-based methods
+are all techniques used in machine learning for various tasks, including
+image classification, object recognition, and natural language
+processing.Siamese neural networks are a type of neural network architecture
+consisting of two identical neural networks, each with its own weights
+and biases. These networks are trained to process input data in the same
+way, and their outputs are compared to one another. Siamese neural
+networks are often used for tasks that involve comparing two input
+samples, such as determining whether two images contain the same object
+or whether two sentences convey the same meaning.\cite{12}
+
+Prototypical networks, on the other hand, are a type of neural network
+architecture that is specifically designed for few-shot learning, a
+machine learning task where the goal is to classify a small number of
+examples from each class. In prototypical networks, the network is
+trained to learn a prototype or representative example for each class,
+and new examples are classified based on their similarity to these
+prototypes.Metric-based methods, also known as distance-based methods, are a type
+of machine learning approach that involves measuring the distance or
+similarity between examples in order to classify them. These methods are
+often used in combination with other machine learning techniques, such
+as k-nearest neighbors (k-NN) or support vector machines (SVMs), to
+classify data based on how similar it is to previously seen examples.\cite{11}
+
+In summary, Siamese neural networks are used for comparing two input
+samples, prototypical networks are used for few-shot learning, and
+metric-based methods are used for classifying data based on the
+similarity between examples. In addition to one-shot learning algorithms, attendance systems may also use other technologies, such as RFID (Radio-Frequency Identification) or
+QR codes, to track attendance. These systems might be better in some
+situations, like when there are a lot of students or employees or when
+facial recognition can't be used because of privacy concerns. Overall, one-shot learning has shown promise as an approach for attendance systems, enabling the development of systems that can
+accurately track and record attendance with a small number of examples.
+But more research needs to be done to find out how one-time learning in
+attendance systems work and what problems and limits they have.\cite{43}
+
+\subsection{Theoretical background}
+\subsubsection{Dimensionality Reduction}
+Dimensionality reduction is the process of minimizing the number of dimensions or features in a dataset while maintaining as much of the original information as possible. It is a widely used technique in machine learning and data analytics, serving to decrease data complexity, enhance model interpretability, and boost the performance of machine learning algorithms. Dimensionality reduction techniques can be broadly divided into two categories: feature selection and feature extraction.
+
+Feature selection focuses on choosing a subset of the original features in the dataset based on their relevance or significance to the task at hand. There are various methods for feature selection, such as:
+
+Filter methods: These techniques employ statistical measures to assess the relevance of each feature, selecting the most pertinent features based on a predefined threshold. T-test and chi-squared test are examples of filter methods.
+
+Wrapper methods: These techniques utilize a machine learning algorithm to evaluate the performance of different feature subsets and select the subset yielding the best performance. Forward selection and backward elimination are examples of wrapper methods.
+
+Embedded methods: These techniques incorporate the selection of relevant features during the optimization of a machine learning algorithm as part of the model training process. Lasso and ridge regression are examples of embedded methods.\\
+Feature extraction, on the other hand, involves generating a new set of features from the original dataset using projection or transformation techniques. Several methods for feature extraction exist, including:
+
+Principal Component Analysis (PCA): This method projects data onto a lower-dimensional space using linear combinations of the original features. The resulting components are ranked by their importance, with the most important components retained for further analysis.
+
+Multidimensional Scaling (MDS): This method projects data onto a lower-dimensional space while preserving the pairwise distances between the points.
+
+Isomap: This method employs a graph-based approach to project data onto a lower-dimensional space while maintaining the global structure of the data.
+
+t-SNE: This method utilizes a probabilistic model to project data onto a lower-dimensional space, preserving the local structure of the data.\cite{41}\cite{40}\\
+In addition to these techniques, hybrid approaches that combine feature selection and feature extraction methods also exist. Dimensionality reduction can be an effective tool for decreasing data complexity and enhancing the performance of machine learning algorithms. However, it is crucial to thoughtfully consider the appropriate technique for a specific dataset and task, as different techniques may have unique strengths and limitations.
+
+It is also important to take into account the trade-off between reducing dimensionality and the potential loss of information, as decreasing the number of dimensions could result in the loss of vital information in the data. Several factors should be considered when selecting a dimensionality reduction technique, such as the nature of the data, the complexity of the task, and the available computational resources.
+
+For instance, if the data is highly structured and the task is relatively simple, a feature selection method might be adequate. Conversely, if the data is highly complex and the task is more challenging, a feature extraction method might be more suitable. Computational resources should also be considered, as some dimensionality reduction techniques can be computationally demanding. For example, PCA and MDS are generally faster than t-SNE, but t-SNE may be more effective in preserving the local structure of the data.
+
+Additionally, it is crucial to consider the interpretability of the resulting dimensions. Some dimensionality reduction techniques, like PCA, produce dimensions that are more interpretable than others, such as t-SNE. This can be important for tasks like data visualization or feature analysis.   In summary, dimensionality reduction is a powerful tool for simplifying data and enhancing the performance of machine learning algorithms. It is crucial to carefully consider the most suitable technique for a specific dataset and task and to weigh the trade-off between reducing dimensionality and the potential loss of information.
+
+By taking into account factors such as the nature of the data, the complexity of the task, the available computational resources, and the interpretability of the resulting dimensions, practitioners can make informed decisions about which dimensionality reduction technique to employ. Ultimately, this can lead to more effective and efficient data analysis, improved model interpretability, and better-performing machine learning algorithms.\cite{42}
+\subsubsection{CNN}
+Convolutional neural networks (CNNs) are a specialized kind of artificial neural network designed for processing grid-like data structures, such as images. They have become integral in numerous applications, including image classification, object recognition, and image generation. CNNs consist of several layers of interconnected neurons that process and manipulate input data through multiple mathematical operations.
+
+The initial layer of a CNN is the input layer, which takes in raw data. Following this are hidden layers that perform various transformations on the data to extract meaningful features. The final layer, known as the output layer, generates the ultimate prediction or classification. A distinctive aspect of CNNs is the incorporation of convolutional layers, which execute a convolution operation on the input data. The convolution process applies a compact, fixed-size filter to the input data and slides it across the data to extract features. This enables CNNs to capture local features critical for tasks like image classification and object detection.
+
+Additionally, CNNs utilize pooling layers that downsample input data by selecting the maximum or average value within a small data region. Pooling layers aid in reducing input data size and boosting the CNN's computational efficiency. CNNs have demonstrated exceptional performance in various tasks, such as image classification, object detection, and image generation. They are widely employed in industry and research and have become a fundamental tool in computer vision.
+
+However, CNNs have some limitations. One notable drawback is their dependency on extensive labeled data for training, which can be costly and time-consuming to gather.\cite{44}\\
+
+Furthermore, CNNs' performance can be influenced by hyperparameter choices, such as the learning rate and the number of layers. Lastly, CNNs can be susceptible to overfitting, which occurs when the model becomes excessively specialized to the training data, resulting in poor performance on new data.
+
+In recent years, several advancements in CNNs have enhanced their performance and broadened their potential applications. One such advancement is the implementation of deep CNNs, which are CNNs with a high number of layers. Deep CNNs have achieved outstanding performance in tasks like image classification, object detection, and image generation. Another significant development is the application of transfer learning, where the weights and biases of a pre-trained CNN are used as a starting point for training a new CNN on a different task. This can substantially reduce the labeled data needed for training and improve the new CNN's performance.
+
+Additionally, there have been numerous innovations in CNN architecture design, such as incorporating skip connections, enabling the CNN to learn more intricate relationships between input data and output prediction. Another innovation involves attention mechanisms, which allow the CNN to concentrate on specific parts of the input data while making predictions. Besides these advancements, researchers are increasingly focusing on making CNNs more efficient and scalable to manage larger and more complex datasets. This has led to the development of techniques like pruning, which involves eliminating unnecessary connections from the CNN, and quantization, which decreases the precision of the CNN's weights and biases, reducing memory and computational resource requirements.\cite{45}\cite{6}\\
+
+
+\subsubsection{Flask}
+
+Flask is a lightweight Python web framework that provides useful tools
+and features for building web applications. It was developed by Armin
+Ronacher in 2010 and has since gained a large and active community of
+users. One of the key features of Flask is its modular design, which allows
+developers to use only the components they need and avoid bloating their
+application with unnecessary functionality. It also provides a flexible
+and extensible architecture, enabling developers to add custom
+components and functionality to their applications easily. Flask uses the Werkzeug WSGI library and the Jinja2 template engine, both of which are widely used and well-respected in the Python
+community. Werkzeug provides a WSGI utility library, which makes it easy
+to create web servers and handle requests and responses. Jinja2 is a
+fast and flexible template engine that allows developers to define the
+structure of their HTML templates and use variables and control
+structures to generate dynamic content. In addition to the core Flask libraries, the framework also includes a number of useful tools and features for building web applications. These
+include support for secure cookies, unit testing, Unicode, and
+integration with many third-party libraries and plugins.\\
+
+One popular extension is Flask-SQLAlchemy, which provides a simple and
+efficient interface for working with databases in Flask applications. It
+simplifies the process of creating and interacting with database models
+and provides support for various database backends, including MySQL,
+PostgreSQL, and SQLite. Another popular extension is Flask-WTF, which simplifies the process of
+creating and validating web forms in Flask applications. It provides a
+simple and secure way to handle form submissions, including support for
+CSRF protection and validation of form data. In addition to these core features and extensions, Flask also has a rich ecosystem of plugins and libraries developed by the community. These
+include tools for handling authentication and authorization, handling
+file uploads, and generating charts and graphs.\\
+
+The Flask community is active and supportive, with a wealth of resources
+and documentation available online. There are also numerous tutorials
+and guides available for those new to the framework and a large number
+of example applications to help developers get started. In summary, Flask is a popular and widely-used web framework that provides a simple and flexible foundation for building web applications.
+Its modular design, extensible architecture, and rich ecosystem of
+plugins and extensions make it a powerful and versatile tool for web
+development. It is well-suited for various applications, including small
+and simple web applications and more complex and feature-rich
+applications. Its active community and extensive documentation make it
+an excellent choice for developers of all skill levels.\cite{digitalocean_flask_tutorial}
+
+\subsubsection{MySQL}
+
+MySQL is a popular open-source relational database management system
+(RDBMS) used in a wide range of applications, including web
+applications, data warehousing, and log analysis. In this literature
+survey, we will explore the history and development of MySQL, its key
+features and capabilities, and its current state of use and popularity. MySQL was first developed in the mid-1990s by a Swedish company called
+MySQL AB. It was initially created as a low-cost alternative to more
+expensive RDBMSs such as Oracle and Microsoft SQL Server. Over the
+years, MySQL has become one of the most widely used RDBMSs in the world,
+with a large user base and strong community support.\cite{38}\\
+
+In 2008, MySQL AB was acquired by Sun Microsystems, which was later
+acquired by Oracle Corporation in 2010. Despite this change in
+ownership, MySQL has continued to be developed and maintained as an
+open-source project, with the source code available under the GNU
+General Public License (GPL). MySQL is known for its ease of use, reliability, and performance. It
+supports a wide range of programming languages and operating systems,
+including C, C++, Java, Perl, Python, PHP, Linux, Unix, and Windows.
+MySQL also supports a wide range of storage engines, including the
+InnoDB storage engine, which is known for its reliability and support
+for transactions.\cite{storage_technology_corporation_wikipedia}\\
+
+In addition to its core database functionality, MySQL includes a number
+of additional features and tools that make it a versatile and powerful
+RDBMS. Some of these features include: Support for large databases: MySQL is designed to handle large amounts
+of data, with the ability to handle databases with millions of rows and
+tables with hundreds of millions of rows. Replication and clustering: MySQL supports replication, which allows
+data to be replicated across multiple servers, and clustering, which
+allows multiple servers to work together to handle the workload of a
+single database. Full-text search: MySQL includes support for full-text search, which
+allows users to search for specific words or phrases within text stored
+in the database. Stored procedures and triggers: MySQL supports stored procedures and
+triggers, which allow developers to create custom logic that is executed
+by the database in response to certain events.\\
+
+MySQL remains one of the most popular RDBMSs in use today, with a large
+user base and a strong presence in the open-source community. According
+to a survey conducted by DB-Engines in 2021, MySQL was the second most
+popular RDBMS, with a 22.5\% market share. It was also the most popular
+RDBMS in the open-source category, with a market share of 45.5\%. MySQL is used in a wide range of applications, including web
+applications, data warehousing, and log analysis. It is particularly
+popular in the web development community, where it is often used as the
+backend database for PHP-based applications.\\
+
+\subsubsection{SHA-256}
+
+The Secure Hash Algorithm 256-bit (SHA-256) is a cryptographic hash function that produces a fixed-length digital signature from a given data input. As one of the multiple cryptographic hash functions outlined by the National Institute of Standards and Technology (NIST) in the Federal Information Processing Standard (FIPS) 180-4, SHA-256 is frequently employed to confirm the authenticity of data in contexts such as digital signatures and software updates, as well as to generate secure passwords and keys. The National Security Agency (NSA) introduced SHA-256 in 2001 as a component of the Secure Hash Standard (SHS), which specifies a range of cryptographic hash functions for use in federal government applications. The initial SHA hash function emerged in 1993 but was later discovered to have vulnerabilities to specific attacks, prompting the creation of more robust hash functions like SHA-256.\cite{avast_md5_hashing}\\
+
+Belonging to the SHA-2 family of hash functions, SHA-256 is accompanied by other variants such as SHA-224, SHA-384, and SHA-512. Regarded as more secure and dependable than its forerunner, SHA-1, SHA-256 has replaced the earlier version, which has since been deemed insecure due to multiple discovered vulnerabilities. SHA-256 operates as a cryptographic hash function that accepts a variable-length input and yields a fixed-size output, often referred to as a hash or digest. The resulting output is a unique 256-bit (32-byte) value corresponding to the input data. Identical inputs consistently generate the same outputs, but even minor alterations to the input yield drastically different outputs. This characteristic, called the "avalanche effect," renders it challenging to foresee the function's output based solely on its input.\cite{39}\\
+
+A crucial characteristic of SHA-256 is its resilience against collision attacks, which involve attempts to identify two distinct inputs that yield the same hash value. SHA-256 is structured to render it computationally impractical to discover two inputs with matching hash values, even after numerous trials. Additionally, the speed and efficiency of SHA-256 make it suitable for a wide array of applications. It can be implemented through software or hardware and is often employed alongside other cryptographic methods, such as digital signatures and message authentication codes (MACs).
+
+SHA-256 sees use in various applications, encompassing digital signatures, software updates, and secure password storage. It also plays a role in the Bitcoin blockchain and other cryptocurrencies, where it safeguards transactions and validates the blockchain's integrity. As per a study by the Cryptographic Hash Function Database, SHA-256 ranks as the second most prevalent cryptographic hash function, holding a 26.5 percent market share. Moreover, it is the most popular variant within the SHA-2 family of hash functions, boasting a 99.9 percent market share.
+
+In conclusion, SHA-256 is a widely adopted and dependable cryptographic hash function specifically designed to resist collision attacks while offering speed and efficiency. It is frequently utilized to ensure data integrity, generate secure passwords and keys, and protect transactions within the Bitcoin blockchain and other cryptocurrencies.\cite{sciencedirect_cryptographic_hash}
+
+
+\subsubsection{Security Challenges}
+
+One-shot learning attendance systems have emerged as a popular application of machine learning technology in recent years. These systems use biometric data, such as facial recognition or fingerprint scanning, to identify and track individuals in educational or workplace settings. While there are many potential benefits to using one-shot learning attendance systems, there are also significant security challenges that must be addressed.\cite{51}
+
+A literature survey of the current state of research on the security challenges of using one-shot learning attendance systems reveals a number of key issues. These include concerns about data privacy and security, the accuracy of biometric identification methods, and the potential for these systems to be used for surveillance or other forms of misuse.\cite{52}
+
+One of the primary security challenges associated with one-shot learning attendance systems is data privacy and security. Biometric data, such as facial recognition or fingerprint scanning, is highly sensitive and personal. If this data is not properly secured, it can be vulnerable to hacking or other forms of data breaches. In addition, there are concerns about the potential for this data to be used for tracking or other forms of surveillance, particularly in educational or workplace settings.
+
+To address these concerns, researchers have proposed a number of approaches. One such approach is the use of encryption to secure biometric data. This can involve encrypting the data at rest, as well as during transmission. Additionally, access controls and authentication measures can be used to limit access to sensitive data to authorized personnel only.\cite{53}\cite{54}
+
+Another key security challenge associated with one-shot learning attendance systems is the accuracy of biometric identification methods. While these systems have the potential to be highly accurate, there are many factors that can impact their performance. For example, lighting conditions, camera angle, and other environmental factors can all affect the quality of the data captured by these systems.
+
+To improve the accuracy of one-shot learning attendance systems, researchers have proposed a number of strategies. These include the use of machine learning algorithms to adapt to changing environmental conditions, as well as the use of multiple biometric identification methods to increase the accuracy of the system.
+
+Finally, there are concerns about the potential for one-shot learning attendance systems to be used for surveillance or other forms of misuse. In educational or workplace settings, these systems can be used to track attendance or monitor behavior. However, there are concerns about the potential for these systems to be used for other purposes, such as tracking the movements of individuals outside of these settings.
+
+To address these concerns, researchers have proposed a number of strategies. These include the development of policies and regulations to govern the use of these systems, as well as the use of transparency and accountability measures to ensure that they are being used in an ethical and responsible manner.\cite{55}
+
+Overall, a literature survey of the current state of research on the security challenges of using one-shot learning attendance systems reveals a number of key issues. While there are many potential benefits to using these systems, it is clear that significant work must be done to address the security challenges associated with them. This will require a multi-disciplinary approach, involving researchers from computer science, law, ethics, and other fields, to ensure that these systems are used in a way that is safe, secure, and ethical.\\\\
+\textbf{Unauthorized collection of personal information}
+\\\\
+The unauthorized collection of personal information is a significant concern when it comes to the use of facial recognition technology in attendance systems. Facial recognition technology relies on capturing images of individuals' faces and using algorithms to analyze the unique features of their faces to identify them. This technology has become increasingly popular in recent years and is used in a variety of settings, including attendance systems in schools, workplaces, and other organizations.
+
+However, the use of facial recognition technology raises serious questions about privacy and data protection. If facial images are collected without the knowledge or consent of the individuals concerned, it could be a violation of their privacy rights. The use of this technology for attendance purposes has the potential to create a surveillance state where individuals are constantly monitored and their movements tracked.
+
+One of the key issues with facial recognition technology is that it can be difficult to control how the data collected is used. The images captured by the system could be used for other purposes beyond attendance tracking, such as identification or surveillance. In the hands of malicious actors, this information could be used to perpetrate identity theft or other forms of cybercrime.\cite{56}\cite{57}\\
+
+Moreover, facial recognition technology is not foolproof, and there is a risk of false positives and false negatives. This means that individuals who are not present could be marked as present, or individuals who are present could be marked as absent. This could have consequences for the individuals concerned, such as being marked as absent and missing out on credit or opportunities.
+
+There are also concerns about the storage of personal information collected by facial recognition technology. Facial images are sensitive personal data and should be treated with the utmost care. If the system stores personal information, it raises questions about the security of the data. The information could be vulnerable to hacking, theft, or other forms of unauthorized access, which could expose the individuals concerned to identity theft or other forms of harm.\cite{58}\\
+
+\textbf{Inaccurate identification}
+\\\\
+Another potential misuse case of a one-shot learning attendance system is the invasion of privacy. One-shot learning attendance systems use machine learning algorithms to identify individuals based on a single image. This technology has the potential to be misused by organizations to monitor the behavior of individuals beyond attendance tracking.
+
+Invasion of privacy is a major concern with the use of one-shot learning attendance systems. These systems have the potential to capture images of individuals without their knowledge or consent, leading to violations of their privacy rights. Additionally, the use of this technology could create a surveillance state where individuals are constantly monitored and their every movement tracked.
+
+One of the key issues with one-shot learning attendance systems is that they rely on facial images to identify individuals. Facial images are considered sensitive personal data and should be treated with the utmost care. If the system captures and stores this data without appropriate consent or security measures, it could lead to serious privacy violations. For example, the data could be hacked, sold, or otherwise misused by unauthorized parties, leading to identity theft or other forms of harm.
+
+Another potential misuse case of one-shot learning attendance systems is the use of the data collected for purposes beyond attendance tracking. For example, the data could be used for identification purposes or for tracking the behavior of individuals. This could lead to a variety of privacy violations, including stalking, harassment, or other forms of intrusive behavior.\cite{59}\\
+
+Moreover, one-shot learning attendance systems have the potential to be used to discriminate against individuals based on their appearance. For example, the algorithm may be biased against individuals with certain facial features, leading to incorrect identifications or exclusions. This could lead to unfair treatment of individuals and potentially illegal discriminatory practices.
+
+To prevent these potential misuses of one-shot learning attendance systems, organizations should take appropriate measures to protect the privacy of the individuals concerned. This could include obtaining consent from individuals before collecting their facial images, ensuring that appropriate security measures are in place to protect the data collected, and limiting the use of the data to attendance tracking only.\\
+
+Organizations should also ensure that the one-shot learning algorithm is designed and trained to be fair and unbiased. This could include using diverse data sets to train the algorithm, testing the system for bias, and regularly monitoring its performance to ensure that it is working as intended.
+
+In addition, organizations should have clear policies in place regarding the use of the data collected by the system. For example, the policies should specify how the data will be used, who will have access to it, and how long it will be retained. These policies should be communicated clearly to all individuals involved, including employees and members.
+
+In conclusion, one-shot learning attendance systems have the potential to be misused for invasion of privacy. It is essential for organizations to take appropriate measures to protect the privacy of the individuals concerned, ensure that the algorithm is fair and unbiased, and have clear policies in place regarding the use of the data collected. By doing so, organizations can use this technology ethically and responsibly and avoid potential legal challenges or reputational damage.\cite{60}\\
+\\\\
+\textbf{Storing personal information}
+\\\\
+Another potential misuse case of a one-shot learning attendance system is the lack of transparency and accountability. One-shot learning attendance systems use machine learning algorithms to identify individuals based on a single image. This technology can be opaque, meaning that it can be difficult to understand how the algorithm works, how decisions are made, and who is responsible for its operation.
+
+The lack of transparency and accountability is a major concern when it comes to the use of one-shot learning attendance systems. If organizations do not have a clear understanding of how the algorithm works or how decisions are made, it can lead to mistakes or bias in the identification process. This can lead to individuals being incorrectly identified or excluded, leading to potential legal challenges or reputational damage.
+
+Additionally, the lack of transparency and accountability can make it difficult to ensure that the system is being used ethically and responsibly. For example, if an organization is using the system to track the attendance of employees, it may be difficult for employees to know if they are being tracked for other purposes or how their data is being used.
+
+Moreover, the lack of transparency and accountability can create a situation where there is no clear responsibility for the operation of the system. If something goes wrong, it may be difficult to determine who is responsible or how to address the issue. This can lead to a lack of accountability and potential harm to individuals or the organization.\cite{61}\\
+
+To address these concerns, organizations using one-shot learning attendance systems should take appropriate measures to ensure transparency and accountability. This includes providing clear information about how the system works, how decisions are made, and who is responsible for its operation.
+
+Organizations should also have clear policies and procedures in place regarding the use of the system. This should include guidelines for the use of the data collected, how the system is maintained, and how issues or errors will be addressed. These policies should be communicated clearly to all individuals involved, including employees and members.
+
+Additionally, organizations should consider using independent auditors or third-party experts to evaluate the system and ensure that it is working as intended. This can provide additional accountability and transparency and help to identify potential issues or areas for improvement.
+
+Another potential solution to address the lack of transparency and accountability is to involve stakeholders in the development and implementation of the system. This includes employees, customers, and other individuals who may be affected by the use of the technology.\cite{62}\\
+
+By involving stakeholders, organizations can gain valuable insights into the potential impact of the system and identify potential concerns or issues before they arise. This can help to ensure that the system is developed and implemented in a responsible and ethical manner, and that it meets the needs of all individuals involved.
+
+Moreover, organizations should also consider implementing a system of checks and balances to ensure that the system is being used appropriately. This can include regular audits of the system, oversight by a designated team or individual, and periodic reviews of the policies and procedures in place.
+
+Additionally, organizations should prioritize the protection of individual privacy and data. This includes implementing appropriate security measures to protect the data collected by the system, providing individuals with clear information about how their data will be used, and obtaining appropriate consent for the use of the data.
+
+Organizations should also consider implementing data retention policies to ensure that data is not stored longer than necessary and is deleted securely when no longer needed. This can help to minimize the risk of data breaches or unauthorized access to sensitive information.
+
+In conclusion, the lack of transparency and accountability is a potential misuse case of one-shot learning attendance systems. To address this concern, organizations should involve stakeholders in the development and implementation of the system, implement checks and balances to ensure appropriate use, prioritize the protection of individual privacy and data, and implement data retention policies. By doing so, organizations can ensure that they are using this technology in a responsible and ethical manner, while avoiding potential legal challenges or reputational damage.\cite{63}\\
+\\\\
+\textbf{Unauthorised access}
+\\\\
+A final potential misuse case of a one-shot learning attendance system is the risk of security breaches and unauthorized access to sensitive information. One-shot learning attendance systems collect and store sensitive data, such as biometric data and attendance records. If this data falls into the wrong hands, it can be used for malicious purposes, such as identity theft or fraud.
+
+Moreover, one-shot learning attendance systems may also be vulnerable to hacking or other types of cyber attacks. If the system is not properly secured, it can be accessed by unauthorized individuals who may be able to manipulate or misuse the data collected.
+
+To address these concerns, organizations using one-shot learning attendance systems should prioritize the protection of sensitive data. This includes implementing appropriate security measures, such as encryption, to protect data both in transit and at rest. Organizations should also consider implementing multi-factor authentication and access controls to prevent unauthorized access to the system.
+
+Moreover, organizations should prioritize regular monitoring and testing of the system to identify and address potential vulnerabilities or weaknesses. This includes conducting regular security audits and penetration testing to ensure that the system is secure and functioning as intended.
+
+Additionally, organizations should consider implementing a data breach response plan to ensure that they are prepared to respond to potential security breaches. This should include procedures for notifying individuals whose data may have been compromised, as well as procedures for securing the system and preventing further breaches\cite{64}\\
+
+Moreover, organizations should also ensure that they are complying with relevant data protection regulations and standards, such as the General Data Protection Regulation (GDPR) in the European Union and the Personal Information Protection and Electronic Documents Act (PIPEDA) in Canada. These regulations require organizations to obtain appropriate consent for the collection and use of personal data, and to implement appropriate security measures to protect this data.
+
+It is also important for organizations to provide clear and transparent information about how the data collected by the system will be used. Individuals should be informed about what data is being collected, how it will be used, and who it will be shared with. This information should be provided in a clear and understandable manner, and should be easily accessible to individuals.
+
+Finally, organizations should prioritize the education and training of employees who will be using the system. This includes providing training on how to use the system appropriately, as well as training on data protection and security best practices. By ensuring that employees are well-informed and well-trained, organizations can minimize the risk of unintentional misuse of the system, and ensure that the system is being used in a responsible and ethical manner.
+
+In conclusion, while one-shot learning attendance systems have the potential to improve efficiency and accuracy in attendance tracking, they also present potential misuse cases that organizations need to be aware of. To mitigate these risks, organizations should prioritize the protection of individual privacy and data, involve stakeholders in the development and implementation of the system, implement checks and balances to ensure appropriate use, and prioritize the education and training of employees. By doing so, organizations can ensure that they are using this technology in a responsible and ethical manner, while avoiding potential legal challenges or reputational damage.\cite{65}
+
+
+\subsubsection{Mitigation of Threats}
+
+Mitigation on security attacks involves minimizing the impact of security threats on an organization's information systems and data. With the increasing reliance on digital technology, security attacks have become a growing concern for organizations of all sizes and types. These attacks can come in various forms, such as malware, phishing, hacking, or denial-of-service attacks, and can result in significant financial losses, reputational damage, and legal consequences.
+
+Effective mitigation strategies require a combination of preventive, detective, and corrective measures. Preventive measures include implementing strong access control mechanisms, firewalls, and antivirus software to prevent security attacks from occurring. Detective measures involve continuously monitoring and analyzing network traffic and system logs to detect any security breaches or anomalies. Corrective measures involve containing and recovering from a security attack, such as restoring data from backups or applying software patches to fix vulnerabilities.
+
+Emerging technologies such as machine learning, artificial intelligence, and blockchain can also play a critical role in enhancing security and improving the effectiveness of mitigation strategies. For instance, machine learning algorithms can be trained to detect and block malware in real-time, while blockchain can be used to create tamper-proof records of system activity, making it harder for attackers to cover their tracks.
+
+Additionally, effective mitigation on security attacks requires a strong security culture that involves everyone within the organization. This includes providing security awareness training to employees and enforcing security policies and procedures. Human error, such as weak passwords or clicking on suspicious links, can often be the cause of security breaches, so ensuring that all employees are aware of their role in maintaining security is essential.
+
+Furthermore, it is essential to keep up-to-date with the latest security trends and best practices. As the threat landscape evolves, new vulnerabilities and attack methods are continually emerging, and mitigation strategies must adapt to keep pace. Regularly reviewing and updating security measures and conducting security assessments can help identify potential weaknesses and address them before they are exploited.
+
+In conclusion, mitigation on security attacks is a critical aspect of cybersecurity that requires a proactive and comprehensive approach. By implementing effective mitigation strategies that combine preventive, detective, and corrective measures, leveraging emerging technologies, fostering a strong security culture, and staying up-to-date with the latest security trends, organizations can better protect themselves against security attacks and minimize their impact when they occur.\cite{66}\\
+\\\\
+\textbf{Privacy concerns mitigation}
+\\\\
+Mitigating the risk of privacy invasion is a critical concern when implementing one-shot learning attendance systems. As attendance systems collect personal data such as names, employee IDs, and attendance records, it is essential to take measures to protect this data and prevent unauthorized access or misuse.
+
+One key mitigation technique for privacy invasion is to collect only necessary data. Organizations should consider what data is essential for attendance tracking and avoid collecting additional personal data that is not required. This approach can help to minimize the amount of personal data that is stored, reducing the risk of exposure to unauthorized parties.
+
+Another effective mitigation technique is to anonymize data. Anonymizing data involves removing identifying information, such as names or employee IDs, from attendance records. This approach can help to protect the privacy of individuals while still enabling organizations to track attendance. Anonymizing data can also help to mitigate the risk of data breaches, as it reduces the value of data to potential attackers.
+
+Obtaining appropriate consent from individuals is another crucial mitigation technique for privacy invasion. Organizations should ensure that individuals are informed about what data is being collected, how it will be used, and who it will be shared with. This information should be provided in a clear and understandable manner, and individuals should have the option to opt-out of data collection if they so choose. Obtaining appropriate consent can help to build trust with employees and other stakeholders, and ensure that data is collected and used in a responsible and ethical manner.
+
+Implementing data retention policies is also an important mitigation technique for privacy invasion. Organizations should ensure that data is not stored longer than necessary and is deleted securely when no longer needed. This approach can help to prevent unauthorized access to personal data and minimize the impact of any potential data breaches.
+
+Regular audits of the system are also essential to mitigate the risk of privacy invasion. Organizations should conduct regular audits to ensure that the system is being used appropriately and that personal data is being protected. Audits can help to identify potential vulnerabilities or areas of concern, and enable organizations to take action to address these issues.
+
+In conclusion, mitigating the risk of privacy invasion is critical when implementing one-shot learning attendance systems. By collecting only necessary data, anonymizing data, obtaining appropriate consent, implementing data retention policies, and conducting regular audits of the system, organizations can protect the privacy of individuals and ensure that data is collected and used in a responsible and ethical manner. These mitigation techniques can help organizations to build trust with employees and other stakeholders, while minimizing the risk of potential legal or reputational damage.
+\cite{67}\\
+\\\\
+\textbf{Bias challenges}
+\\\\
+The risk of bias is another important concern when implementing one-shot learning attendance systems. These systems use artificial intelligence and machine learning algorithms to recognize individuals, and if not designed and implemented correctly, they can lead to biased results. Biased results can occur when the algorithm has been trained on a biased dataset, or when the algorithm has not been designed to account for certain demographic characteristics, such as race or gender. The following are some key mitigation techniques that can help to address the risk of bias in one-shot learning attendance systems:\\
+
+Diverse Dataset: The training dataset used to develop the machine learning algorithm should be diverse and representative of the population that the system will be used for. This can help to ensure that the algorithm is not biased towards any particular group and can recognize individuals from a range of backgrounds.\cite{68}\\
+
+Regular Testing: Regular testing of the system should be conducted to ensure that it is functioning correctly and not producing biased results. This testing should be done across a diverse set of images and should take into account the diversity of the population that the system will be used for.\cite{69}\\
+
+Algorithmic Transparency: It is essential to ensure that the machine learning algorithm is transparent, and the decision-making process can be explained. This can help to identify and correct any potential biases in the system.\\
+
+Regular Updating: One-shot learning attendance systems should be updated regularly to ensure that they remain current and can account for any potential bias. Regular updating of the system can help to identify and address any new or emerging biases that may arise over time.\\
+
+Ethical Considerations: The ethical considerations should be carefully considered when developing and implementing one-shot learning attendance systems. This can include issues such as data privacy, fairness, and accountability. Organizations should have clear policies and procedures in place to ensure that these considerations are addressed appropriately.\\
+
+In conclusion, mitigating the risk of bias in one-shot learning attendance systems is crucial to ensure that the system is fair and equitable for all individuals. By using a diverse dataset, regular testing, algorithmic transparency, regular updating, and ethical considerations, organizations can help to address the risk of bias in these systems. These mitigation techniques can help to build trust with employees and other stakeholders, ensure compliance with legal and ethical standards, and minimize the risk of reputational damage.\cite{70}\\
+\\\\
+\textbf{Risk of Inaccuracy}
+\\\\
+The risk of inaccuracy is another important concern when implementing one-shot learning attendance systems. Inaccurate attendance records can lead to a range of issues, including incorrect payment of salaries, employee dissatisfaction, and legal compliance issues. The following are some key mitigation techniques that can help to address the risk of inaccuracy in one-shot learning attendance systems:\\
+
+Quality of Images: The quality of the images used to train the machine learning algorithm can have a significant impact on the accuracy of the system. High-quality images should be used to ensure that the system can recognize individuals accurately.\\
+
+Adequate Lighting: Adequate lighting is essential to ensure that the system can capture clear images of individuals. Poor lighting can result in inaccurate attendance records and should be avoided.\\
+
+Regular Maintenance: Regular maintenance of the system is essential to ensure that it is functioning correctly and producing accurate results. Maintenance can include cleaning cameras, replacing hardware, and updating software.\\
+
+Staff Training: Staff responsible for operating the one-shot learning attendance system should be adequately trained to ensure that they understand how to use the system correctly. This can help to prevent user error, which can result in inaccurate attendance records.\\
+
+Regular Testing: Regular testing of the system should be conducted to ensure that it is producing accurate results. Testing should be conducted across a range of images and lighting conditions to ensure that the system is functioning correctly.\\
+
+Double-Checking Attendance Records: Double-checking attendance records can help to identify any inaccuracies in the system. This can involve comparing attendance records with physical attendance logs or asking employees to confirm their attendance.\\
+
+In conclusion, mitigating the risk of inaccuracy in one-shot learning attendance systems is essential to ensure that the system is producing accurate results. By using high-quality images, ensuring adequate lighting, regular maintenance, staff training, regular testing, and double-checking attendance records, organizations can help to address the risk of inaccuracy in these systems. These mitigation techniques can help to ensure compliance with legal and ethical standards, prevent user error, and minimize the risk of reputational damage.\cite{71}\\
+\\\\
+\textbf{Risk of security breaches}
+\\\\
+The risk of security breaches is another important concern when implementing one-shot learning attendance systems. These systems can capture and store sensitive information about individuals, such as facial images and biometric data. If not designed and implemented correctly, they can be vulnerable to security breaches, which can result in the theft or misuse of this information. The following are some key mitigation techniques that can help to address the risk of security breaches in one-shot learning attendance systems:\cite{73}\\
+
+Data Encryption: All data stored by the system should be encrypted to ensure that it cannot be accessed by unauthorized individuals. This can help to prevent data theft or misuse.\\
+
+Secure Data Storage: The data should be stored in a secure location, and access should be restricted to authorized individuals only. This can help to prevent physical theft of data.\\
+
+Regular Software Updates: Regular software updates should be conducted to ensure that the system remains secure and can address any potential security vulnerabilities that may arise.\cite{74}\\
+
+Access Control: Access to the system should be controlled, and users should be required to use strong passwords and two-factor authentication to prevent unauthorized access.\\
+
+Regular Security Audits: Regular security audits should be conducted to identify any potential security vulnerabilities in the system. This can help to ensure that the system remains secure and can address any potential security risks.\cite{75}\\
+
+Employee Training: All employees responsible for operating the system should be trained on security protocols and best practices to prevent security breaches. This can help to prevent user error, which can result in security breaches.\\
+
+In conclusion, mitigating the risk of security breaches in one-shot learning attendance systems is crucial to ensure that sensitive information is protected. By using data encryption, secure data storage, regular software updates, access control, regular security audits, and employee training, organizations can help to address the risk of security breaches in these systems. These mitigation techniques can help to prevent data theft or misuse, ensure compliance with legal and ethical standards, and minimize the risk of reputational damage.\cite{72}\\
+
+\subsubsection{Haar cascades}
+Haar Cascades are a popular object detection technique in computer vision and machine learning. Introduced by Viola and Jones in 2001, this method uses a set of simple features to detect and track objects in images and videos. Since then, Haar Cascades have been widely adopted and have become a fundamental tool in computer vision.\cite{76}\cite{77}\\
+
+Haar Cascades represent classifiers that identify objects by examining distinct sub-regions within an image or video. These classifiers are developed by training a machine learning model using positive and negative samples. Positive samples encompass images featuring the object of interest, while negative samples consist of images lacking the target object. Haar Cascades rely on basic features, such as differences in brightness between neighboring pixels, as well as more intricate features related to texture and edge detection.
+
+During the training process, the machine learning model learns to distinguish between the two sample categories by adjusting its weights to minimize classification errors. Once the model has been trained, it can detect the object of interest in new images and videos. This is achieved by scanning the image using a sliding window and applying the classifier to each sub-region.\cite{78}\cite{79}\\
+
+Haar Cascades have several advantages over other object detection methods. Firstly, they are computationally efficient and can detect objects in real-time, making them suitable for applications such as face detection and tracking. Secondly, they are robust to changes in illumination and can detect objects under different lighting conditions. Thirdly, they can be trained on a small number of samples, making them ideal for applications where large training sets are not available. Haar Cascades have been used in a wide range of applications, including face detection, object tracking, pedestrian detection, and gesture recognition. Face detection is one of the most popular applications of Haar Cascades, which has been widely used in security systems, social media, and virtual reality. Haar Cascades have also been used in object tracking, where they can be used to track the movement of objects in real-time, and in pedestrian detection, where they can be used to detect pedestrians in traffic and prevent accidents. Moreover, Haar Cascades have been used in gesture recognition, where they can be used to identify hand and body movements in real-time.\cite{80}\\
+
+Over the years, several improvements have been made to the Haar Cascade algorithm to make it more efficient and accurate. One such improvement is the use of Adaboost, which is a boosting algorithm that improves the accuracy of the Haar Cascade classifier. Another improvement is the use of LBP (Local Binary Patterns) features, which are more robust to changes in lighting conditions and provide better accuracy compared to Haar features. Additionally, some researchers have explored the use of deep learning techniques, such as convolutional neural networks (CNNs), for object detection and tracking.\cite{81}\\
+
+Haar cascades are a cascade of weak classifiers that gradually eliminate non-object regions of an image. A Haar cascade consists of multiple stages, with each stage consisting of multiple weak classifiers. Each weak classifier evaluates a single feature or set of features, which are typically rectangular regions of the image. At each stage, the classifier determines whether the image patch contains the object of interest or not. If the patch is rejected, it is discarded and the next stage is evaluated. If the patch passes all stages, it is considered a positive detection.\cite{83}\cite{84}\\
+
+
+The quantity of stages and weak classifiers in Haar Cascade object detection is contingent upon the object's complexity and the desired level of accuracy. Generally, a larger number of stages and weak classifiers leads to greater accuracy but a slower detection process.
+
+At the core of Haar Cascade object detection lies the utilization of Haar-like features, which are rectangular sections of the image exhibiting varying intensity levels. These features are calculated by subtracting the sum of pixel intensities in a rectangular region above the feature from the sum of pixel intensities in a rectangular region below the feature. The outcome is a singular value that represents the difference in intensity levels and serves as a feature for the classifier.
+
+Haar features are computationally efficient, allowing for simultaneous computation of multiple features using integral images. An integral image is one in which each pixel denotes the sum of all pixels above and to its left. The implementation of integral images facilitates rapid computation of Haar features, thereby enhancing the efficiency of the detection process.\cite{85}\\
+
+The training of Haar cascades involves selecting a set of positive and negative images and iteratively optimizing the weak classifiers to minimize the classification error. The optimization process involves selecting the best feature for each weak classifier and determining the optimal threshold for each feature.
+One optimization technique for Haar cascades is AdaBoost, a machine learning algorithm that selects the most informative features and optimizes the weak classifiers. AdaBoost trains each weak classifier on a subset of the training data, with more weight given to misclassified examples. This results in a stronger classifier with higher accuracy.\cite{86}\cite{87}\\
+
+Another method for optimization involves cascading, in which weak classifiers are organized hierarchically, with features becoming progressively more complex. This approach minimizes false positives and enhances overall detection accuracy.
+
+In summary, Haar Cascades serve as a potent instrument for object detection within the realms of computer vision and machine learning. They offer computational efficiency, remain robust under varying lighting conditions, and can be effectively trained using a limited number of samples. Haar Cascades have been extensively applied in numerous use cases, such as face detection, object tracking, pedestrian detection, and gesture recognition. As the fields of computer vision and machine learning continue to evolve, Haar Cascades are expected to maintain their significance as a key tool for object detection and tracking.\cite{82}\cite{88}\cite{89}\cite{90}\\
+
+
+\subsection{Literature Survey}
+The following websites were instrumental in finding relevant algorithms to make the project:
+\begin{enumerate}[label=(\alph*)]
+\item \href{https://towardsdatascience.com}{Towards data science}
+\item \href{https://en.wikipedia.org}{Wikipedia}
+\item \href{https://machinelearningmastery.com}{Machine learning mastery}
+\item \href{https://scholar.google.com}{Google Scholar}
+\end{enumerate}
+
+
+\subsubsection{Research Paper Summary}
+One-shot learning represents a machine learning approach that enables the classification or recognition of new classes or categories using just a single or a few examples. This differs from conventional machine learning, which often demands a substantial volume of labeled data to learn and generalize to new classes. One-shot learning proves especially valuable in circumstances where acquiring large quantities of labeled data is difficult or impractical, such as when dealing with rare or unique classes or when the time or cost of labeling data is high.
+
+The limited availability of training data makes one-shot learning a challenging task. To generalize to new classes based on minimal information, models must effectively extract and employ pertinent features and patterns from the data. This necessitates the creation of robust and adaptable models capable of handling noise and variability in the data, as well as quickly and accurately adapting to new classes. Various strategies for one-shot learning exist, including metric-based methods, model-based methods, and meta-learning methods.\cite{13}\\
+
+Metric-based methods involve learning a distance or similarity metric between examples in order to compare and classify new examples. One example of a metric-based method is the use of matching networks, which use a learned metric to compare the input to a set of support examples and predict the label of the input based on the similarity between the input and the support examples. Another example is the use of prototypical networks, which use a learned metric to compute the distance between the input and the prototypes of each class, and then use the distances to predict the label of the input. Model-based methods involve learning a model or function that maps inputs to outputs, and then using the model to classify new examples. One example of a model-based method is the use of graph neural networks (GNNs) for one-shot learning. GNNs use a graph structure to encode the relationships between the input and the support examples, and then use the encoded relationships to predict the label of the input. Another example is the use of relational information in one-shot learning, where a model uses a graph neural network to encode the relationships between the input and the support examples, and then uses the encoded relationships to predict the label of the input.\cite{14}\\
+
+Meta-learning, also known as learning to learn, centers on acquiring a model or a set of parameters that can be quickly adapted to new tasks with only a few examples. By leveraging a differentiable convex optimization algorithm, the model is capable of learning parameters that can adjust to new tasks even when data is limited. Meta-learning has been used in conjunction with one-shot learning to address the challenge of learning from sparse data.
+
+One-shot learning has found applications across a variety of tasks and domains, such as image classification, object detection, medical image analysis, robotics, and natural language processing. In the context of medical image analysis, one-shot learning is particularly beneficial for diagnosing rare or novel diseases, where securing a large amount of labeled data can be difficult. For tasks involving structured outputs, like object detection and segmentation, one-shot learning seeks to classify and pinpoint objects within an image. In robotics, one-shot learning is advantageous for tasks including object recognition and grasping, where robots must identify and manipulate new objects using limited data. In the realm of natural language processing, one-shot learning has been employed for tasks like language translation and language modeling, aiming to understand and generate text based on minimal data.\cite{15}
+\cite{16}\\
+
+One of the obstacles in one-shot learning is the necessity for strong models that can manage noise and variability in the data. This can be particularly daunting in fields like medical image analysis, where images might be of low quality or contain noise and artifacts. To be effective, one-shot learning models need to extract pertinent features and patterns from the data despite these challenges.
+
+Another difficulty in one-shot learning is the challenge of acquiring large quantities of labeled data. This can be especially problematic for rare or new classes, where it might be tough to find enough examples to train a model. To tackle this challenge, one-shot learning methods must be capable of extracting and utilizing relevant information from the limited data available.
+
+Despite these challenges, one-shot learning has the potential to be an invaluable resource for a wide array of tasks and domains. Its capability to learn from just a single example or a few examples makes it well-suited for situations where obtaining a large amount of labeled data is difficult or impractical. Nevertheless, the development of robust and effective one-shot learning methods remains a vibrant research area, as many open questions and challenges still need to be addressed.\cite{17}\cite{18}\\
+
+One-shot learning is a form of machine learning in which a model can learn and make predictions based on just one example or a limited number of examples. This differs from traditional machine learning techniques, which usually need a sizable dataset to make accurate predictions. Few-shot learning is akin to one-shot learning but refers to a model's capability to learn and make predictions using a small number of examples instead of just one. These learning methods are valuable when data is scarce for a specific task.
+
+Zero-shot learning, also known as no-shot learning, is a machine learning approach that enables a model to learn and make predictions for classes or tasks it has not encountered during training. This is accomplished through the use of supplementary information, such as class-level attributes or semantic relationships between classes. While one-shot learning and few-shot learning are beneficial when data is limited for a specific task, zero-shot learning is advantageous when no data is available for a particular task.\cite{19}\cite{20}\cite{21}\cite{25}\\
+
+One shot learning and few shot learning are useful in a variety of situations where it is difficult or impractical to collect a large amount of data. For example, one shot learning has been applied to tasks such as object recognition and speech recognition, where the model is able to learn and make predictions based on a single example or a few examples. Few shot learning has also been applied to natural language processing tasks, such as machine translation and text classification, where it is difficult to obtain large amounts of labeled data for all possible languages or categories.\cite{22} One shot learning and few shot learning are typically implemented using neural networks, with the goal of learning a generalizable model that can make accurate predictions on new data. This is achieved through the use of metric learning, which involves training the model to learn a distance metric between examples in order to identify which examples are similar. The model is then able to use this distance metric to make predictions on new data based on its similarity to the examples it has seen during training.\cite{23} No shot learning is a more recent development in machine learning and is often implemented using deep learning techniques. The goal of no shot learning is to enable the model to make predictions for classes or tasks that it has not seen any examples of during training. This is achieved through the use of auxiliary information, such as class-level attributes or semantic relationships between classes, which the model can use to make predictions without any direct examples. No shot learning has the potential to greatly expand the range of tasks that machine learning models can perform, but it is still an active area of research and has not yet been widely adopted in practice. One of the main challenges in one shot learning and few shot learning is the limited amount of data available for training. This can make it difficult for the model to learn a generalizable representation of the data, and can result in poor performance on new data. To address this challenge, researchers have developed various methods for improving the robustness and generalizability of one shot learning and few shot learning models. These methods include:\cite{26} Data augmentation: Increasing the size of the training dataset by generating additional synthetic examples using techniques such as rotation, scaling, and translation. Transfer learning: Reusing the weights and biases of a pre-trained model on a related task as the starting point for training a new model on a different task.\cite{27}\cite{28}
+Meta learning: Training a model to learn how to learn, by learning from a distribution of tasks rather than a single task. No shot learning also faces challenges related to the availability of auxiliary information, such as class-level attributes or semantic relationships between classes. This information may not always be available or may be incomplete, which can limit the performance of no shot learning models. In addition, no shot learning models may be more prone to bias due to the reliance on auxiliary information, which may not always be representative of the underlying data.\cite{29} Overall, one shot learning, few shot learning, and no shot learning are important techniques in machine learning that enable models to learn and make predictions with a limited amount of data. While these techniques have the potential to greatly expand the range of tasks that machine learning models can perform, they also come with their own challenges and limitations, and are not always practical or applicable to all tasks.\\\\\\
+\newpage
+\section{Proposed Algorithm/Work/Application}
+We are developing this application to achieve  drastically reduced time it takes to make a presence log (attendance). Using a single image of a student, we want to recognize the student from video input and add his presence to the presence log. For this, we need video input and recognize each student in the video.
+\subsection{Classification using one image}
+
+One-shot learning is a  advanced and intuitive machine learning approach that enables a model to
+learn from a singular number of example rather than requiring a large
+dataset for training. This is particularly useful in  those particular situations wherein it
+is difficult or impossible to collect a humongous amount of training data or
+where the target concept is rare or hard to define. One-shot learning is
+related to other machine learning approaches such as few-shot learning,
+which also involves learning from a small number of examples, and
+zero-shot learning, which involves learning about a concept without any
+examples of that concept. Most people think that one-shot learning is
+harder than  the popular few shot learning because the model has to learn from a
+single example instead of a small number of examples. Image recognition,
+natural language processing, and robotics are all areas where one-shot
+learning could be used. For example, it could be used to enable a robot
+to learn new tasks by observing a single demonstration, or to enable a
+machine learning model to recognize new objects or concepts based on a
+single example.\cite{30}\\
+
+One-shot learning can be done in different ways, such as with
+metric-based, optimisation-based, or model-based methods. Metric-based
+methods involve learning a distance metric that can be used to compare
+new examples to the single training example and classify them based on
+how similar they are. Optimization-based methods involve adjusting the
+parameters of a model so that it fits the single training example, while
+model-based methods involve learning a model of the target concept from
+the single training example. The field of machine learning has done a lot of research on one-shot
+learning, and many papers have been written about it. The development of
+Siamese networks, a type of neural network architecture that works well
+for one-shot learning tasks, and the creation of the Omniglot dataset, a
+widely used benchmark for testing one-shot learning algorithms, are both
+important contributions to the field. There have also been a number of attempts to improve the performance of
+one-shot learning algorithms. These include using meta-learning
+approaches, which involve learning how to learn from a small number of
+examples, and using generative models, which can create new examples of
+the target concept based on the single training example.\\
+
+In addition to these technical contributions, there have also been a
+number of studies that have explored the psychological and neurological
+basis of one-shot learning in humans and how these insights can be used
+to inform the development of one-shot learning algorithms. For example,
+some research has shown that humans are good at learning from a single
+instance because the brain can make a mental prototype of the concept.
+This prototype can then be used to sort new examples based on how
+similar they are to the prototype.\cite{31}\cite{1}
+\subsubsection{Traditional Classification}
+
+Overall, the field of one-shot learning is an active area of research,
+with many ongoing efforts to improve the performance of one-shot
+learning algorithms and to figure out how humans can learn from a small
+number of examples. As machine learning techniques keep improving,
+one-shot learning is likely to become more important in many
+applications. Learn, build, and learn to build a model that can classify
+an input image as belonging to a particular individual based on a set of
+labeled training examples. Several traditional classification algorithms have been used for face
+recognition, including support vector machines (SVMs), k-nearest
+neighbors (k-NN), and decision trees. These algorithms work by learning
+a model that maps input features (such as pixel values in an image) to a
+set of class labels (such as the names of different individuals).
+\cite{32}
+One common approach to traditional pattern recognition is to use a
+feature extractor to extract a set of features from an input image and
+then use these features as input to a classifier. For example, an image
+might be transformed into a set of features such as edge points, texture
+patterns, or facial landmarks that can be used to distinguish one face
+from another.
+\cite{33}
+Traditional face recognition models have been made better in several
+ways, such as by making feature extractors that work better and using
+more advanced machine learning algorithms. For example, deep learning
+methods, which involve training a neural network on large datasets, have
+been shown to be especially good at face recognition tasks.\\
+
+Traditional approaches to classifying faces have been used a
+lot and have worked well in many situations. However, they can be
+sensitive to variations in lighting, pose, and expression and may not
+perform as well as more advanced approaches such as one-shot learning,
+which requires learning from a small number of examples. As machine
+learning techniques keep improving, traditional classification methods
+will likely keep changing and improving. This will make face recognition
+systems more accurate and reliable. In addition to traditional classification methods, a number of other
+methods have been developed for face recognition. These include
+metric-based methods, which involve learning a distance metric that can
+be used to compare new examples to a set of labelled training examples,
+and model-based methods, which involve learning a model of the target
+concept based on the training examples. One of the hardest things about
+face recognition is being able to deal with changes in lighting, pose,
+and expression, as these things can make a big difference in how a
+person's face looks and make it hard to recognize them. Researchers have
+come up with a number of ways to deal with this problem, such as data
+augmentation, which involves making new training examples by changing
+the original ones, and transfer learning, which involves using a model
+that has already been trained and fine-tuning it for a new task.
+\cite{34}\\
+
+There have also been efforts to improve the robustness and security of
+face recognition systems, such as the development of adversarial
+attacks, which are designed to fool a face recognition model by
+presenting it with images that are specifically designed to be
+misclassified, and the use of secure protocols, such as HTTPS, to
+transmit data over the internet and protect sensitive data from
+interception by unauthorised parties. Face recognition is a very active area of research, with many
+ongoing projects to improve the performance and reliability of face
+recognition models and to figure out how humans can recognize faces. As
+machine learning techniques continue to improve, face recognition is
+likely to become more important in a wide range of settings. This is
+because machines will be able to recognize people more accurately and
+reliably in different situations.
+
+\subsubsection{One-shot classification and Siamese Neural Network}
+
+One-shot classification is a machine learning method that lets a model
+classify an input example based on a single example of the target class.
+This is especially helpful when it's hard or impossible to find a lot of
+examples of the target class or when the target concept is uncommon or
+hard to explain. One-shot classification is related to machine learning approaches, such
+as few-shot learning, which involves learning from a small number of
+examples, and zero-shot learning, which involves learning about a
+concept without any examples. Most people think that one-shot
+classification is harder than few-shot learning because the model has to
+learn from a single example instead of a small number of examples. One approach to one-shot classification is the use of Siamese neural
+networks, a type of neural network architecture well-suited to one-shot
+learning tasks. Siamese neural networks are made up of two identical
+neural networks that are trained to look at two examples and figure out
+how similar they are. The two networks are trained using pairs of
+examples, where one example is from the target class, and the other is
+from a different class. The networks are taught to give examples from
+the same class with a high similarity score and examples from different
+classes with a low similarity score.\cite{35}\\
+
+Siamese neural networks have been used for image recognition, natural
+language processing, and robotics, all of which are one-shot
+classification tasks. They are especially good at tasks like face
+recognition, where the goal is to recognize a person based on a single
+picture of their face. There have been a number of attempts to improve the performance of
+one-shot classification algorithms, such as the use of meta-learning
+approaches, which involve learning how to learn from a small number of
+examples, and the use of generative models, which can create new
+examples of the target concept based on the single training example.
+Overall, one-shot classification is an active area of research, with
+many ongoing efforts to improve the performance of one-shot
+classification algorithms and to figure out how humans can learn from a
+small number of examples. As machine learning techniques keep getting
+better, one-shot classification is likely to become more important in a
+wide range of applications. This is because it lets machines learn and
+adapt to new situations with very little data.\cite{36}\cite{37}
+
+\begin{center}
+
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=0.4]{1.png}
+\caption{Siamese Network}
+\end{figure}
+    
+\end{center}
+\FloatBarrier
+
+\subsubsection{One-shot classification vs other algorithms}
+One shot learning is a type of machine learning where the model is able to learn and make predictions based on a single example or a small number of examples. This is in contrast to traditional machine learning methods, which typically require a large dataset in order to make accurate predictions. Few shot learning is similar to one shot learning, but it refers to a model's ability to learn and make predictions based on a few examples, rather than just one. This type of learning is useful when there is a limited amount of data available for a particular task. No shot learning, also known as zero-shot learning, is a type of machine learning where the model is able to learn and make predictions for classes or tasks that it has not seen any examples of during training. This is achieved through the use of auxiliary information, such as class-level attributes or semantic relationships between classes.\cite{46}\\
+
+One shot learning and few shot learning are useful when there is a limited amount of data available for a particular task, but no shot learning is useful when there is no data available for a particular task. In general, one shot learning and few shot learning are more practical and widely used than no shot learning, as it is often difficult to obtain class-level attributes or semantic relationships between classes. However, no shot learning can be a useful tool in certain situations, such as when there are a large number of classes or tasks and it is not feasible to collect data for all of them. One shot learning and few shot learning are useful in a variety of situations where it is difficult or impractical to collect a large amount of data. For example, one shot learning has been applied to tasks such as object recognition and speech recognition, where the model is able to learn and make predictions based on a single example or a few examples. Few shot learning has also been applied to natural language processing tasks, such as machine translation and text classification, where it is difficult to obtain large amounts of labeled data for all possible languages or categories. One shot learning and few shot learning are typically implemented using neural networks, with the goal of learning a generalizable model that can make accurate predictions on new data. This is achieved through the use of metric learning, which involves training the model to learn a distance metric between examples in order to identify which examples are similar. The model is then able to use this distance metric to make predictions on new data based on its similarity to the examples it has seen during training.\cite{47}\\
+
+No shot learning is a more recent development in machine learning and is often implemented using deep learning techniques. The goal of no shot learning is to enable the model to make predictions for classes or tasks that it has not seen any examples of during training. This is achieved through the use of auxiliary information, such as class-level attributes or semantic relationships between classes, which the model can use to make predictions without any direct examples. No shot learning has the potential to greatly expand the range of tasks that machine learning models can perform, but it is still an active area of research and has not yet been widely adopted in practice.\cite{48}\\
+
+One of the main challenges in one shot learning and few shot learning is the limited amount of data available for training. This can make it difficult for the model to learn a generalizable representation of the data, and can result in poor performance on new data. To address this challenge, researchers have developed various methods for improving the robustness and generalizability of one shot learning and few shot learning models. These methods include: Data augmentation: Increasing the size of the training dataset by generating additional synthetic examples using techniques such as rotation, scaling, and translation.
+Transfer learning: Reusing the weights and biases of a pre-trained model on a related task as the starting point for training a new model on a different task. Meta learning: Training a model to learn how to learn, by learning from a distribution of tasks rather than a single task.
+No shot learning also faces challenges related to the availability of auxiliary information, such as class-level attributes or semantic relationships between classes. This information may not always be available or may be incomplete, which can limit the performance of no shot learning models. In addition, no shot learning models may be more prone to bias due to the reliance on auxiliary information, which may not always be representative of the underlying data. Overall, one shot learning, few shot learning, and no shot learning are important techniques in machine learning that enable models to learn and make predictions with a limited amount of data. While these techniques have the potential to greatly expand the range of tasks that machine learning models can perform, they also come with their own challenges and limitations, and are not always practical or applicable to all tasks.\\
+
+
+
+\subsection{Algorithm for One-shot Learning}
+
+One-shot learning is a machine learning type where a model can learn and
+make predictions based on a small number of examples. On the other hand,
+traditional machine learning methods usually need a large dataset to
+make accurate predictions. In the past few years, one-shot learning has
+become more popular because there is more data available, and it is
+possible to train models on this data. Several algorithms have been developed for one-shot learning, including: The model is taught to recognize patterns by minimizing a loss function,
+which measures the difference between the predicted and true labels. The
+model is taught to recognize patterns by minimizing a loss function,
+which measures the difference between predicted and real labels. Memory-based methods are a type of one-shot learning algorithm that
+stores examples in memory and retrieves them during training. The model
+is trained to recognize patterns by comparing the input example to the
+examples in memory and selecting the one with the closest match as the
+predicted class.\\
+
+Overall, one-shot learning algorithms have successfully performed many
+tasks, such as recognizing objects, checking faces, and processing
+natural language. However, one-shot learning algorithms still face
+challenges, such as the need for a large amount of data for training and
+the difficulty of generalizing to new classes.
+\cite{1}
+\begin{center}
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=0.2]{2.png}
+\caption{Convolution Neural Network}
+\end{figure}
+\end{center}
+\FloatBarrier
+
+This model can be intuitively understood by the neural network shown below. There are two image inputs (x1 and x2), both having N1 pixels. These are then sent to a hidden layer (h1 and h2), which extracts N2 features from the images. These features are then sent to the distance layer, where distances are found for each feature (Thus, N2 distance would be calculated). These N2 distances combine into one number, giving the similarity probability between these two images
+\begin{center}
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=0.2]{3.png}
+\caption{CNN Layers\cite{3}}
+\end{figure}
+\end{center}
+\FloatBarrier
+
+
+\subsection{Relationship Schema}
+\begin{quote}
+A relation schema is a blueprint for a database table that defines the structure and organization of the data it will store. It specifies the attributes (columns) of the table and their data types, as well as any constraints or rules that apply to the data. The above database schema includes several relation schemas, each representing a different table in the database. The Students table is designed to store information about students, including their unique student ID, name, address, and a link to an image file. The Student\_Id attribute is defined as the primary key, meaning it is a unique identifier for each student and cannot be null or duplicate. The Class table is used to store information about class sections, including the unique class code, academic year, and semester. The Class\_code attribute is defined as the primary key. The Teachers table is designed to store information about teachers, including their unique teacher ID, name, title, email, address, phone, and mobile. The Teacher\_Id attribute is defined as the primary key. The Attendances table is used to store attendance records for students in a particular class. It includes the unique attendance ID, the student ID, course code, teacher ID, class code, attendance status (present or absent), and date of attendance. The Attendence\_Id attribute is defined as the primary key, and the table also includes foreign keys to the Students, Teachers, and Class tables. The Class\_students table is used to store information about the students enrolled in each class. It includes the unique class student serial number, student ID, and class code. The class\_student\_sr\_no attribute is defined as the primary key, and the table also includes a foreign key to the Students and Class tables. The Courses table is used to store information about the courses offered by the school, including the unique course code and course name. The Course\_code attribute is defined as the primary key. The Student\_course table is used to store information about the courses that each student is enrolled in. It includes a unique serial number, class code, and up to six course codes. The Sr\_no attribute is defined as the primary key, and the table also includes foreign keys to the Class and Courses tables. Finally, the teacher\_login table is used to store login credentials for teachers. It includes the teacher's ID and password, with the Teacher\_Id attribute defined as the primary key and a foreign key to the Teachers table.\\
+
+In summary, the above database schema is designed to store a wide range of information about students, teachers, classes, courses, and attendance records in a school. It uses a combination of primary and foreign keys to enforce relationships and ensure the integrity of the data.
+\end{quote}
+\begin{center}
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=0.4]{ERD.jpeg}
+\caption{Relationship Schema}
+\end{figure}
+\end{center}
+\FloatBarrier
+
+\subsection{Summary}
+
+One-shot learning was chosen as the best algorithm for our attendance
+system because it lets the model learn from a small number of examples
+and make predictions from those. This is important for our system
+because we only have limited training data available. In addition,
+one-shot learning algorithms can adapt quickly to new classes of
+students, which is important for our system because we need to handle
+new students or employees without the need for retraining.
+
+Overall, one-shot learning was chosen as the best algorithm for our
+attendance system because it lets us track and record attendance
+accurately with a small amount of data and can also adapt to new classes
+of students or employees.
+
+\clearpage
+\section{Simulation and results}
+
+For our prototype, we decided to use Python and Jupyter Notebook as our
+development environment. Python is a popular programming language for
+machine typed learning and Artificial Intelligence because it has a lot of libraries and frameworks.
+Jupyter Notebook is a web-based interactive development environment that
+lets us organize and run our code in a clear and organized way. One of
+the benefits of using Jupyter Notebook is that it allows us to divide
+our code into chunks, which makes it easier to test and debug. To test, train, and evaluate the performance of our one-shot learning
+classifier, we need a positive dataset, a negative dataset, and an
+anchor dataset. We will use the images to test how well our model works
+in the positive dataset. The negative dataset is the one that we will
+use to train our model. We got our negative dataset from an open-source
+dataset with a large and varied set of images that we can use to effectively train
+our model.\\
+
+The test dataset is used to compare the results from the anchor image
+and test datasets to see how accurate our model is. In one-shot
+learning, the anchor image is used as a reference to compare against the
+test images, and the model is trained to recognize patterns that are
+similar to the anchor image. By comparing the test dataset's results to
+the anchor image, we can figure out how well our model works and how
+accurate it is. Overall, using Python and Jupyter Notebook lets us build and test our
+one-shot learning classifier in a clear and organized way. Using the
+positive, negative, and anchor datasets lets us test how well our model
+works and how accurate it is. By carefully choosing and preparing these
+datasets, we can ensure that our model can correctly classify and
+predict the class of the test images.
+
+
+\subsection{Model Summary}
+
+Figure 5 is a picture that shows how the embedding layer of our model is
+put together. The embedding layer is a key part of our model because it
+takes the input data (in this case, images) and turns it into a
+numerical representation that the rest of the model can use. The picture shows that the input data goes through a extended and comprehensive series of
+convolutional as well as pooling layers, which pull out specific features from the input
+data and reduce its dimensionality. The results of these layers are then
+sent to the embedding layer, which turns the extracted features into
+numbers. This numerical representation, called an embedding, is a
+simplified data version showing the most important patterns and
+features.
+
+In deep learning models, the embedding layer is often used to do things
+like classify images, find objects, and process natural language. It
+allows the model to learn a compact representation of the input data
+that is more efficient to process and that captures the most important
+features and patterns. In our model, the embedding layer is a key part
+of how the model learns from a small number of examples and uses this
+learning to make accurate predictions.
+\begin{center}
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=0.5]{4.png}
+\caption{Embedding Layer}
+\end{figure}
+\end{center}
+\FloatBarrier
+
+The image shown in Figure 6 summarizes the structure of our Siamese
+network. A Siamese network is a type of neural network that consists of
+two identical sub-networks that are trained to recognize similar
+features in two input images. The output of a Siamese network is a
+measure of the similarity between the two input images. The picture shows that the Siamese network has two branches with several
+convolutional and pooling layers on each. The input images are passed
+through these branches, and the output of the branches is fed into a
+final layer, which compares the outputs and calculates a measure of the
+similarity between the input images.\\
+
+Siamese networks have been used for a wide range of tasks, such as
+recognizing objects, checking faces, and processing natural language.
+They are particularly useful in one-shot learning, as they are able to
+learn and make predictions based on a small number of examples. In our
+model, the Siamese network is a key part of how the model can find
+similar parts in different images and figure out how similar they are.
+This helps the model accurately classify the input images and make
+predictions based on this classification.
+
+\begin{center}
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=0.4]{5.png}
+\caption{Siamese Network}
+\end{figure}
+\end{center}
+\FloatBarrier
+
+
+\subsection{Visualising the results}
+\subsubsection{Model Prototyping}
+In a one-shot learning model, the similarity between images is a big
+part of figuring out how likely a certain classification is. On the
+other hand, when the similarity between images is low, it means that the
+input image is less likely to belong to the same class as the image in
+the database, and the probability of that particular classification is
+also low. When the similarity between images is high, it indicates that
+the input image is likely to belong to the same class as the image in
+the database. As a result, the probability of that particular
+classification is also high. On the other hand, when the similarity
+between images is low, it means that the input image is less likely to
+belong to the same class as the image in the database, and the
+probability of that particular classification is also low. The image shown in Figure 7 illustrates this concept. The image shows
+that when the similarity between the image in the database and the input
+image is high, the probability of the classification is also high. This
+means the model is sure about its prediction and is more likely to
+classify the image correctly. On the other hand, if the similarity
+between the two images is low, the probability of the classification is
+also low. This means that the model is less sure of its prediction and
+may be more likely to make a mistake.\\
+
+In a one-shot learning model, the similarity between images is a key
+factor in figuring out how likely a certain classification is. By
+carefully calculating the similarity between images and using this
+information to make predictions, the model is able to make accurate and
+reliable classifications based on a small number of examples.
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=0.5]{6.png}
+\caption{Positive Similarity}
+\end{figure}
+\FloatBarrier
+
+The following image (Figure 8) shows when low similarity is present between the image in the database and the input image:
+
+\begin{center}
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=0.5]{7.png}
+\caption{Negative Similarity}
+\end{figure}
+\end{center}
+\FloatBarrier
+
+\subsubsection{Website Development}
+In phase 2 of our project, we focused on building the website and creating the database that would store the attendance data. The website was designed to be user-friendly and intuitive, with a simple layout that made it easy for students to log in and check their attendance. To create the database, we first had to decide on a suitable database management system. After researching various options, we ultimately chose MySQL as it was widely used and had a large community of developers who could provide support and guidance. Once we had selected the database management system, we began the process of designing the database schema. This involved determining the structure of the tables and the relationships between them, as well as deciding on the data types and constraints for each field.\\
+
+Once the database schema was complete, we used SQL scripts to create the tables and populate them with sample data. This allowed us to test the database and ensure that it was working correctly before moving on to the next phase of development. In addition to building the website and creating the database, we also spent some time configuring the server that would host the website. This involved installing the necessary software and setting up the necessary security protocols to ensure that the website and database were secure and protected from potential threats. Overall, phase 2 was a critical step in the development of our attendance system, as it laid the foundation for the rest of the project. By building the website and creating the database, we were able to ensure that the system was user-friendly and reliable, and that it would be able to store and manage attendance data in an efficient and accurate manner.\\
+
+For our website, we decided to use the Flask framework due to its lightweight and easy-to-use nature. To connect Flask to our MySQL database, we utilized the \begin{verbatim}
+mysql.connector\end{verbatim} library. In addition, we implemented sessions to effectively manage the session of each individual teacher. Overall, we found that Flask provided an efficient and user-friendly platform for building our website, and the integration with MySQL and session management enabled us to effectively store and retrieve data as well as manage user sessions.
+
+\begin{center}
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=0.2]{8.jpeg}
+\caption{Login Page}
+\end{figure}
+\end{center}
+\FloatBarrier
+
+
+\begin{center}
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=0.2]{9.jpeg}
+\caption{Sign Up Page}
+\end{figure}
+\end{center}
+\FloatBarrier
+
+
+\begin{center}
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=0.2]{10.jpeg}
+\caption{Profile Page}
+\end{figure}
+\end{center}
+\FloatBarrier
+
+
+\begin{center}
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=0.2]{11.jpeg}
+\caption{Edit Profile Page}
+\end{figure}
+\end{center}
+\FloatBarrier
+
+
+\subsubsection{Model and Website Integration}
+In this phase, the one-shot learning model was retrained with 1000 epochs, using a new custom training step. The purpose of retraining the model was to improve its accuracy and performance. The custom training step was created to optimize the training process and improve the convergence of the model. The new training step utilized a combination of different loss functions, such as triplet loss and softmax loss, to improve the model's ability to recognize faces. The existing one-shot learning model had limited speed, which meant that it could not be used in real-time attendance management systems. To address this issue, multithreading was introduced to the model, making it 20x faster. The purpose of multithreading was to enable the model to recognize faces in real-time, as attendance is marked in real-time. By using multithreading, the model was able to process multiple frames simultaneously, improving the overall performance of the system. To integrate the model with the Flask-based website, a Flask API was developed. The API allowed the website to communicate with the model and retrieve attendance data. The API was designed to handle different types of requests, such as GET and POST requests, to retrieve and update attendance data. The model was fully integrated with the website, allowing for end-to-end functionality. The website was designed to display attendance data in real-time, enabling educators to monitor attendance easily. The system was also designed to send notifications to students who were absent, informing them of their absence.\\
+
+\begin{center}
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=0.2]{16.png}
+\caption{Graph of model without Multithreading}
+\end{figure}
+\end{center}
+\FloatBarrier
+
+
+\begin{center}
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=0.2]{15.png}
+\caption{Graph of model with Multithreading}
+\end{figure}
+\end{center}
+\FloatBarrier
+
+Prior to integration, the one-shot learning model was tested using manually labelled images. The testing was done to evaluate the accuracy of the model and to identify any errors or issues that needed to be addressed. The manually labelled images were used to train the model and assess its performance. The testing phase also involved collecting data on the model's accuracy and performance. This data was used to fine-tune the model and improve its overall performance. The testing phase was crucial to ensure that the model was working accurately and efficiently before it was integrated with the website.\\
+
+In conclusion, the implementation phase involved retraining the one-shot learning model, introducing multithreading to make it faster, developing a Flask API to integrate it with the website, and testing the model using manually labelled images. The final system was designed to provide end-to-end functionality, enabling educators to monitor attendance easily and notifying students of their absence. The testing phase ensured that the model was working accurately and efficiently, making it a reliable tool for attendance management in large classrooms.\\
+
+\begin{center}
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=0.2]{12.jpeg}
+\caption{Teacher Profile Page}
+\end{figure}
+\end{center}
+\FloatBarrier
+
+
+
+
+\begin{center}
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=0.2]{13.jpeg}
+\caption{Mark attendence Page}
+\end{figure}
+\end{center}
+\FloatBarrier
+
+
+
+
+\begin{center}
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=0.2]{14.jpeg}
+\caption{Student Attendence View Page}
+\end{figure}
+\end{center}
+\FloatBarrier
+
+
+\subsubsection{Testing}
+
+As a team, we conducted thorough testing for the web application we developed that integrated a one-shot model for attendance. The testing process involved several stages, including unit testing, integration testing, system testing, and acceptance testing.\\
+
+During the unit testing stage, we tested individual code units, such as functions and methods, to ensure that they worked as intended. Integration tests helped us identify and fix issues that may arise when components are combined, such as data mismatches, interface incompatibilities, and network latency issues. During the system testing stage, we tested the entire system's functionality, including all the components and interfaces, to ensure that it worked as intended. System tests helped us identify and fix issues that may arise when the system is running on different environments and under various loads. For the acceptance testing stage, we involved users to test the system's functionality and provide feedback. Acceptance tests helped us identify and fix issues that may arise when users interact with the system, such as usability problems, interface inconsistencies, and data inaccuracies.\\
+
+Although we conducted testing at all stages of the development process, we acknowledge that there may be some areas we missed or overlooked. Therefore, testing should be an ongoing process throughout the application's lifecycle, and any issues should be addressed promptly to ensure that the application is of the highest quality and meets the end-users' needs.
+
+\begin{center}
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=0.5]{17.jpg}
+\caption{Efficiency of Model}
+\end{figure}
+\end{center}
+\FloatBarrier
+\section{Conclusion and Future Work}
+
+In short, we used a Siamese neural network to make a one-shot learning
+model for recognizing faces. We tested how well the model worked and
+found that when there was less similarity between the two images being
+compared, the model also gave a lower probability. We tested how well
+the model worked and found that when there was less similarity between
+the two images being compared, the model also gave a lower probability.
+On the other hand, when there is more similarity between the images, the
+probability assigned by the model is higher. One-shot learning is a type of machine learning that lets a model learn
+from a small number of examples and make predictions based on what it
+has learned. In our model, we used a Siamese neural network, which is
+made up of two identical sub-networks that are trained to find similar
+features in two input images. The output of a Siamese neural network is
+a measure of the similarity between the two input images, which can be
+used to classify the images and make predictions based on this
+classification.\\
+
+During our testing, we saw that the similarity between the images being
+compared directly affected the model's likelihood of a certain
+classification. When there were fewer similarities between the images,
+the likelihood of classification was lower. This meant that the model
+wasn't as sure about its prediction. On the other hand, when the images
+were more alike, the model was more likely to classify them correctly.
+This meant that the model was more sure of its prediction. Overall, our one-shot learning model could recognize faces accurately
+and make predictions based on how similar the input images were. By
+carefully calculating the similarity between images and using this
+information to make predictions, the model was able to make accurate and
+reliable classifications based on a small number of examples.
+
+
+
+\subsection{Conclusion}
+
+The algorithm discussed in this report represents the first stage of our
+project. Our goal was to make a prototype that could recognize a face in
+a picture by using one-shot learning. We were able to finish the process
+of prototyping and test how well our prototype worked. During prototyping, we used a one-shot learning algorithm that could
+recognize faces in pictures. One-shot learning is a type of machine
+learning that lets a model learn from a small number of examples and
+make predictions based on what it has learned. This makes it well-suited
+for tasks such as face recognition, where it is often impossible to
+gather a large amount of training data. To test the performance of our prototype, we used a number of different
+images and compared the output of the model to the expected results. We
+found that our prototype could give useful results, recognizing faces
+correctly in most of the pictures. But we also found some things that
+could be better, such as the need to fine-tune the model's parameters
+and improve its ability to generalize.\\
+
+Overall, we are happy with how our prototyping process turned out, and we
+think that our one-shot learning algorithm could be useful for face
+recognition tasks. However, we recognize that there is still work to be
+done to further improve the performance of our prototype and make it
+more robust and reliable. In the future, we plan to keep working on and
+testing our one-shot learning algorithm to make it even better and more
+accurate.\\ 
+
+In the second phase of development, we focused on creating the frontend
+of the website and designing the database. We made a number of user
+interface elements, like buttons, menus, and forms, for the front end of
+the website so that users could interact with it. We also made a number
+of images and graphics to make the website look good and be easy to use. To design the database, we first created an relationship diagram, which is a visual representation of the data that will be
+stored in the database. The Relationship diagram allowed us to clearly define the
+relationships between different entities (such as users, products, and
+orders) and understand how they will be connected in the database. After making the Relationship diagram, we normalized the database to make sure it
+worked well and was well-organized. Normalization is the process of
+putting the data into smaller, easier-to-manage tables and figuring out
+how these tables relate to each other. This helps to reduce redundancy
+and improve the overall performance of the database.\\
+
+Finally, we created the database itself, using the Relationship diagram and the
+normalized data as guides. To do this, the database's tables and columns
+had to be set up and filled with the right information. In general, the second development phase was about making the website's
+front end and designing and putting the database in place. We were able
+to make a website that worked well and looked good by carefully
+designing and normalizing the database and making the front end easy to
+use.
+
+
+n conclusion, the implementation phase of our attendance marking system was a crucial step in the development of the project. Through the implementation phase, we were able to retrain the one-shot learning model with 1000 epochs using a new custom training step that utilized multiple loss functions. We also introduced multi threading to the model, which significantly improved its speed and enabled it to recognize faces in real-time. Furthermore, we fully integrated the model with the Flask-based website, allowing for end-to-end functionality.\\
+
+During the implementation phase, we also designed and created the database that would store the attendance data. This involved selecting MySQL as our database management system and designing the database schema by determining the structure of the tables and relationships between them. We also used SQL scripts to create the tables and populate them with sample data, which allowed us to test the database and ensure that it was working correctly.
+
+In addition to the above, we also carried out some initial testing by using manually labelled images to evaluate the model's performance. Finally, we made a number of images and graphics to make the website look good and be easy to use.
+
+Overall, the implementation phase was crucial in laying the foundation for the rest of the project. By retraining the model, introducing multithreading, and fully integrating the model with the website, we were able to create an attendance marking system that is fast, accurate, and efficient. Furthermore, by carefully designing and normalizing the database, we ensured that the system is well-organized, reducing redundancy and improving the overall performance of the database.\\
+
+\subsection{Future Work}
+
+In the second phase of our final year project, we plan to focus vigorously on tying up loose ends and addressing any unresolved issues in the development of the one-shot learning attendance system. This will involve conducting rigorous testing to ensure that the system is fit for practical use. Our main goal is to deliver a prototype that can be used in a real-world setting. We are committed to conducting thorough testing to determine the accuracy and reliability of the system, as well as identify any areas where it may need improvement.\\
+
+Through this testing process, we aim to ensure that the one-shot learning attendance system is robust and effective and that it meets the needs and expectations of its intended users. By focusing on these critical areas, we believe we can deliver a prototype that makes a real difference in the lives of those who use it, and that contributes to the broader field of attendance tracking and management.\\
+
+
+During the third phase of development, we focused on adding the
+one-shot learning model to the website and making a prototype of the
+attendance system. This will require making and putting in place a user
+interface that lets teachers sign in to the system and record attendance by taking a video. This video will be converted into an image with each face which appears in the video. These face images will be sent to the one-shot
+learning model. The model will use what it has learned to identify the
+person and mark their attendance. Once the model has been successfully added to the website, we'll need to connect the prototype to a database so that we can store and manage the data about attendance. This involved designing a suitable database schema to hold the data and implementing a backend system to manage the database and provide access to the data through the website.\\
+
+In the fourth phase, we plan to test the model and fix any bugs which may occur. It will be important to test the prototype carefully to make sure
+it works well and meets the requirements. This could mean putting the
+prototype through user testing to get feedback on how well it works and
+how easy it is to use, as well as performance testing to make sure it
+can handle the expected workload and grow as needed. This would be our fourth and final phase.\\
+
+
+The prototype can be used as a starting point for developing and
+improving the attendance system in the future. It may be necessary to
+make further improvements to the one-shot learning model or the website
+to improve the system's accuracy and reliability or to add
+additional features or functionality as needed. Overall, the third phase of development will be very important for turning the prototype into a fully functional, ready-to-use attendance system. By combining the one-shot learning model with the prototype and connecting it to a database, we'll be able to make a system that can accurately track attendance and identify people based on their faces.\\
+
+In the fourth phase, we completed our prototype for a attendance system using one-shot learning. Our prototype gives a great base for future improvements in the field. Improvements in our model is essential for the proper deployment of the model and furthermore, proper website development with features spanning across all domains is a must to properly and effortlessly deploy in a academic environment. Methods for increasing the efficiency of our model is what we plan to research in the future. One way to do this is to train our model on data set of people it is intended to detect. In our case, we want to detect students of age 18 to 24; thus, we will train our model on data set which has images of students between age of 18 and 24. This will increase the model's efficiency. However, more research is needed in this area to make our model suitable for release.\\
+
+\newpage
+\begin{center}
+\begin{Large}
+Appendix
+\end{Large}
+\end{center}
+Step 1: Install Required Dependencies\\\\
+Before using our Flask webapp for presence log with one shot learning, you need to make sure that you have the following requirements installed on your system: Flask, NumPy, TensorFlow, and Python. If you don't have them installed, you can download and install them from their respective websites.\\\\
+Step 2: Teacher Flow\\\\
+Login Page:\\\\
+Open your web browser and enter the URL for our Flask webapp.\\
+On the landing page, click on the "Login" button.\\
+Enter your login credentials, including your username and password, and click on the "Login" button.\\\\
+Mark Attendance Page:\\\\
+After logging in, you will be redirected to the mark attendance page.\\
+On this page, you need to enter your ID, name, course code, class code, and upload a\\video to mark attendance.\\
+The video will be used for one shot learning, which will recognize students' faces and mark\\attendance accordingly.\\\\
+Student Attendance Page:\\\\
+You can access the student attendance page from the navbar on every page.\\
+On this page, you can see the attendance of every student in the class for a particular\\course.
+The attendance is displayed in a table format, showing the dates for which each student was present or absent.\\\\
+Edit Attendance Page:\\\\
+The edit attendance page is used to edit attendance for a particular date.\\
+To access this page, select the course and the date for which you want to edit attendance.
+You can then edit the attendance for each student in the class.\\\\
+Main Dashboard Page:\\\\
+You can access the main dashboard page from the navbar on every page.\\
+On this page, you can see your details, including your name, ID, and contact information.\\
+You can also access other pages from the navbar, such as the mark attendance page an\\the student attendance page.
+
+\newpage
+
+
+
+\printbibliography
+
+\newpage
+\begin{center}
+\begin{Large}
+Acknowledgement
+\end{Large}
+\end{center}
+We, the final year undergraduate student of Sardar Vallabhbhai National Institute of Technology, Surat, are overwhelmed in all humbleness to acknowledge our deep gratitude to all those
+who have helped us to put our ideas to perfection and have assigned various tasks, well above
+the level of simplicity and into something concrete and unique.\\
+We, wholeheartedly thank Dr. Balu L. Parne, Assistant Professor, Computer Science and Engineering Department, SVNIT Surat for having faith in us. His insight and knowledge into the
+subject matter steered us through our project. We are thankful to him for his valuable suggestions and critical advice. With the help of his brilliant guidance and encouragement, we were
+able to complete all the tasks assigned to us within the given time frame.\\
+We would also like to thank Dr. Rupa Mehta, Head of Department, Computer Science and
+Engineering Department.\\
+Lastly, many thanks to SVNIT, Surat and its staff for providing an enriching
+platform necessary in acquiring quality and sufficient knowledge to accomplish the goals perceived.
+
+
+\end{document}

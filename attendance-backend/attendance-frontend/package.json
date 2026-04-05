@@ -1,0 +1,24 @@
+{
+  "name": "attendance-backend",
+  "version": "1.0.0",
+  "description": "Production-grade attendance system with one-shot learning",
+  "scripts": {
+    "dev": "uvicorn main:app --reload --host 0.0.0.0 --port 8000",
+    "start": "uvicorn main:app --host 0.0.0.0 --port 8000",
+    "test": "pytest tests/",
+    "build": "docker build -t attendance-backend ."
+  },
+  "dependencies": {
+    "fastapi": "^0.104.0",
+    "uvicorn": "^0.24.0",
+    "sqlalchemy": "^2.0.23",
+    "python-jose": "^3.3.0",
+    "pydantic": "^2.5.0",
+    "pymysql": "^1.1.0",
+    "onnxruntime": "^1.16.0",
+    "opencv-python": "^4.8.1",
+    "numpy": "^1.26.0",
+    "asyncpg": "^0.29.0",
+    "redis": "^5.0.1"
+  }
+}

@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  attendance-backend:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - SECRET_KEY=${SECRET_KEY:-karanp19-secret-key-change-in-production-$(random)}
+      - DATABASE_URL=postgresql+asyncpg://attendance:attendance@db/attendance
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - attendance-net
+
+  db:
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: attendance
+      POSTGRES_PASSWORD: attendance
+      POSTGRES_DB: attendance
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U attendance"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - attendance-net
+
+  attendance-frontend:
+    build: ../attendance-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_URL=${VITE_API_URL:-http://localhost:8000}
+    depends_on:
+      - attendance-backend
+    networks:
+      - attendance-net
+
+networks:
+  attendance-net:
+    driver: bridge
+
+volumes:
+  postgres-data:
+  redis-data:
